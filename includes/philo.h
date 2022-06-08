@@ -85,6 +85,7 @@ typedef struct	s_data
 
 int	init_data(t_data *data);
 int	create_pthreads(t_data *data);
+int	join_threads(t_data *data);
 
 /*
 ** Routine
@@ -125,5 +126,7 @@ void	free_all(t_data *data);
 
 int		error(char *str);
 int		failed_sleep(t_philo *philo);
+int		error_init_data(t_data *data, enum err error);
+int		error_threads(t_data *data, int i);
 
 #endif

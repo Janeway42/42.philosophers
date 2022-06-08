@@ -6,13 +6,13 @@
 /*   By: cpopa <cpopa@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/05/30 11:25:36 by cpopa         #+#    #+#                 */
-/*   Updated: 2022/06/08 17:09:29 by cpopa         ########   odam.nl         */
+/*   Updated: 2022/06/08 21:50:40 by janeway       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int		abort_init_data(t_data *data, enum err error)
+int		error_init_data(t_data *data, enum err error)
 {
 	if (error == err_forks)
 		free(data->philos);
@@ -24,33 +24,7 @@ int		abort_init_data(t_data *data, enum err error)
 	return (ERROR);
 }
 
-int	abort_threads(t_data *data, int i)
-{
-	while (i > -1)
-	{
-		pthread_join(data->pthread_id[i], NULL);
-		i--;
-	}
-	return (abort_init_data(data, err_threads));
-}
 
-int	create_pthreads(t_data *data)
-{
-	int	i;
-
-	i = 0;
-	data->pthread_id = malloc(sizeof(pthread_t) * data->nr_philo);
-	if (!data->pthread_id)
-		return (error("failed threads\n"));
-	while (i < data->nr_philo)
-	{
-		if (pthread_create(&data->pthread_id[i], NULL,
-					&routine, &data->philos[i]) != 0)
-			abort_threads(data, err_threads);
-		i++;
-	}
-	return (OK);
-}
 
 
 // data->forks_lock = the array of locks belonging to each of the forks on the table
@@ -62,16 +36,16 @@ int	init_data(t_data *data)
 	// printf("time: %ld\n", data->start_time.tv_sec);
 	if (gettimeofday(&data->start_time, NULL) != 0)
 		return (error("failed gettimeofday\n"));
-	printf("initial time: %ld\n", data->start_time.tv_sec);
+	printf("initial time: %ld\n", ((data->start_time.tv_sec * 1000) + (data->start_time.tv_usec / 1000)));
 
 	data->philos = malloc(sizeof(t_philo) * data->nr_philo);
 	if (!data->philos)
-		return (abort_init_data(data, err_philos));
+		return (error_init_data(data, err_philos));
 
 // malloc and initialize fork mutexes
 	data->forks_lock = malloc(sizeof(pthread_mutex_t) * data->nr_philo);
 	if (!data->forks_lock)
-		return (abort_init_data(data, err_forks));
+		return (error_init_data(data, err_forks));
 
 	i = 0;
 	while (i < data->nr_philo)

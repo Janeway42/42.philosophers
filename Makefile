@@ -5,6 +5,7 @@ UNAME = $(shell uname)
 
 S_SRC	=	philo.c\
 			init_data.c\
+			threads.c\
 			routine.c
 S_PATH	=	src/
 S_OBJ	=	$(S_SRC:%.c=$(S_PATH)%.o)
