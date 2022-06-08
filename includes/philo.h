@@ -9,8 +9,8 @@
 # include <stddef.h>
 # include <sys/time.h>
 
-#define EXIT_OK 0
-#define EXIT_ERROR 1
+#define OK 0
+#define ERROR 1
 
 #define TRUE 1
 #define FALSE 0
@@ -51,16 +51,6 @@ enum err
 // usleep works in mocroseconds
 // 1 milisecond = 1000 microseconds
 
-typedef struct		s_info
-{
-	int				nr_philo;
-	int				t_die;
-	int				t_eat;
-	int				t_sleep;
-	int				nr_rounds;
-	struct timeval	start_time;
-}					t_info;
-
 typedef struct	s_philo
 {
 	int				id;
@@ -74,12 +64,16 @@ typedef struct	s_philo
 
 typedef struct	s_data
 {
-	int a;
-	t_info			info;
-	t_philo			*philos;
+	int				nr_philo;
+	int				t_die;
+	int				t_eat;
+	int				t_sleep;
+	int				nr_rounds;
+	struct timeval	start_time;
 	pthread_t		*pthread_id;
 	pthread_mutex_t	*forks_lock;
 	pthread_mutex_t	*write_lock;
+	t_philo			*philos;
 }				t_data;
 
 
@@ -89,8 +83,8 @@ typedef struct	s_data
 ** ---------------------------------
 */
 
-void	init_data(t_data *data);
-void	create_pthreads(t_data *data);
+int	init_data(t_data *data);
+int	create_pthreads(t_data *data);
 
 /*
 ** Routine
@@ -105,8 +99,9 @@ void	*routine(void *var);
 */
 
 int		ft_atoi(const char *nptr);
-int		get_time();
-void	state_message(t_philo *philo, enum msg message);
+int		get_time(void);
+void	write_message(t_philo *philo, enum msg message);
+int		get_elapsed_time(t_philo *philo);
 
 /*
 ** Outcome

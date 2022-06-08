@@ -6,47 +6,49 @@
 /*   By: cpopa <cpopa@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/05/30 11:25:36 by cpopa         #+#    #+#                 */
-/*   Updated: 2022/06/07 16:14:15 by cpopa         ########   odam.nl         */
+/*   Updated: 2022/06/08 17:34:56 by cpopa         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	get_time()
+int	get_elapsed_time(t_philo *philo)
 {
 	struct timeval time;
+	int elapsed_time;
 
-	gettimeofday(&time, NULL);
-	return (time.tv_sec);
+	if (gettimeofday(&time, NULL) != 0)
+		return (ERROR);
+	// printf("start_time: %ld\n", philo->data->start_time.tv_sec);
+	// printf("get time: time: %ld\n", time.tv_sec);
+	elapsed_time = (time.tv_sec - (philo->data->start_time.tv_sec));
+	// printf("elapsed_time: %d\n", elapsed_time);
+	return (elapsed_time);
 }
 
 void	take_forks(t_philo *philo)
 {
 	// lock neighbours
-	// pthread_mutex_lock(&philo->data->philos[philo->left_fork].neighbour_lock);   ///////////////
-	// pthread_mutex_lock(&philo->data->philos[philo->right_fork].neighbour_lock);
+	pthread_mutex_lock(philo->data->philos[philo->left_fork].neighbour_lock);   ///////////////
+	pthread_mutex_lock(philo->data->philos[philo->right_fork].neighbour_lock);
 
-
-	// printf("%d\n", philo->id);
 	// lock forks
 	pthread_mutex_lock(&philo->data->forks_lock[philo->left_fork]);
-	state_message(philo, msg_fork);
+	write_message(philo, msg_fork);
 	pthread_mutex_lock(&philo->data->forks_lock[philo->right_fork]);
-	state_message(philo, msg_fork);
+	write_message(philo, msg_fork);
 
 	// release neighbours
-	// pthread_mutex_unlock(&philo->data->philos[philo->left_fork].neighbour_lock);
-	// pthread_mutex_unlock(&philo->data->philos[philo->right_fork].neighbour_lock);
+	pthread_mutex_unlock(philo->data->philos[philo->left_fork].neighbour_lock);
+	pthread_mutex_unlock(philo->data->philos[philo->right_fork].neighbour_lock);
 }
 
 int	check_last_eaten(t_philo *philo)
 {
 	int	time;
-	int elapsed_time;
 
-	time = get_time();
-	elapsed_time = time - philo->last_eaten;
-	if (elapsed_time > philo->data->info.t_die)
+	time = get_elapsed_time(philo);
+	if (time > philo->data->t_die)
 		return (1);
 	philo->last_eaten = time;
 	return (0);
@@ -54,34 +56,43 @@ int	check_last_eaten(t_philo *philo)
 
 int	philo_eat(t_philo *philo)
 {
+	printf("control eat\n");
+	
 	// last eaten
 	if (check_last_eaten(philo) == 1)
 		return (philo_dead(philo));
-	
-	// eat
-	if (usleep(philo->data->info.t_eat * 1000) == -1)
-		return (failed_sleep(philo));
+	printf("control eat 1\n");
 
+	// eat
+	write_message(philo, msg_eat);
+	usleep(philo->data->t_eat * 1000);
+	//sleep(2);
+
+	// if (usleep(philo->data->t_eat * 1000) != 0)
+	// 	return (failed_sleep(philo));
+
+	write (1, "control eat 2\n", 15);
+	
 	// release forks 
 	pthread_mutex_unlock(&philo->data->forks_lock[philo->left_fork]);
 	pthread_mutex_unlock(&philo->data->forks_lock[philo->right_fork]);
 	philo->times_eaten += 1;
+	printf("time eaten: %d\n", philo->times_eaten);
 
-	return (EXIT_OK);
+	return (OK);
 }
 
 void	philo_sleep(t_philo *philo)
 {
-//	printf("philosopher %d is now sleeping\n", (philo->id + 1));
-	state_message(philo, msg_sleep);
-	usleep(philo->data->info.t_sleep);
+	write_message(philo, msg_sleep);
+	usleep(philo->data->t_sleep);
 }
 
-// void	philo_think(t_philo *philo)
-// {
-// 	printf("philosopher %d is now thinking\n", (philo->id + 1));
-// 	usleep(philo->data->input.t_th);
-// }
+void	philo_think(t_philo *philo)
+{
+	write_message(philo, msg_think);
+//	usleep(philo->data.);
+}
 
 void	*routine(void *arg)
 {
@@ -92,10 +103,11 @@ void	*routine(void *arg)
 //	if (check_times_to_eat(data))
 
 	take_forks(philo);
+	// printf("control\n");
 	philo_eat(philo);
-	philo_sleep(philo);
-
+	// philo_sleep(philo);
 	// think
+
 	pthread_join(philo->data->pthread_id[philo->id], NULL);
 	return (NULL);
 }
