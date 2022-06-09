@@ -6,7 +6,7 @@
 /*   By: cpopa <cpopa@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/05/30 11:25:36 by cpopa         #+#    #+#                 */
-/*   Updated: 2022/06/08 21:57:43 by janeway       ########   odam.nl         */
+/*   Updated: 2022/06/09 16:29:18 by cpopa         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,8 @@ int main (int argc, char **argv)
 	if (init_data(&data) == ERROR)
 		return (ERROR);
 	create_pthreads(&data);
+	// protect create
+	//monitor?
 	join_threads(&data);
 
 	printf("%d, %d, %d, %d\n", data.nr_philo, data.t_die, data.t_eat, data.t_sleep);

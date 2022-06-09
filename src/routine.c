@@ -6,22 +6,11 @@
 /*   By: cpopa <cpopa@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/05/30 11:25:36 by cpopa         #+#    #+#                 */
-/*   Updated: 2022/06/08 22:35:58 by janeway       ########   odam.nl         */
+/*   Updated: 2022/06/09 17:48:03 by cpopa         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-int	get_elapsed_time(t_philo *philo)
-{
-	struct timeval time;
-	int elapsed_time;
-
-	if (gettimeofday(&time, NULL) != 0)
-		return (ERROR);
-	elapsed_time = ((time.tv_sec - philo->data->start_time.tv_sec) * 1000 + (time.tv_usec - philo->data->start_time.tv_usec) / 1000);
-	return (elapsed_time);
-}
 
 void	take_forks(t_philo *philo)
 {
@@ -40,7 +29,7 @@ void	take_forks(t_philo *philo)
 	pthread_mutex_unlock(philo->data->philos[philo->right_fork].neighbour_lock);
 }
 
-int	check_last_eaten(t_philo *philo)
+void	check_last_eaten(t_philo *philo)
 {
 	int	time;
 
@@ -48,35 +37,26 @@ int	check_last_eaten(t_philo *philo)
 	printf("time: %d\n", time);
 	printf("last eaten: %d\n", philo->last_eaten);
 	if ((time - philo->last_eaten) > philo->data->t_die)
-		return (1);
+		philo->data->dead_philo = 1;
 	philo->last_eaten = time;
-	return (0);
 }
 
 int	philo_eat(t_philo *philo)
 {
 
-	// last eaten
-	// if (check_last_eaten(philo) == 1)
-	// 	return (2);
-		// return (philo_dead(philo));
-	// printf("control eat 1\n");
-
-	// eat
 	write_message(philo, msg_eat);
-	usleep(philo->data->t_eat * 1000);
-	//sleep(2);
 
-	// if (usleep(philo->data->t_eat * 1000) != 0)
-	// 	return (failed_sleep(philo));
+	better_sleep(philo->data->t_sleep);
+	//if (usleep(philo->data->t_eat * 1000) != 0)
+	//	return (error_sleep(philo->data));
 
-	// write (1, "control eat 2\n", 15);
-	
-	// release forks 
+	// release forks
 	pthread_mutex_unlock(&philo->data->forks_lock[philo->left_fork]);
 	pthread_mutex_unlock(&philo->data->forks_lock[philo->right_fork]);
+	write_message(philo, msg_release);                              // erase when completed
+
 	philo->times_eaten += 1;
-	printf("time eaten: %d\n", philo->times_eaten);
+	printf("time eaten: %d\n", philo->times_eaten);    /// erase when completed
 
 	return (OK);
 }
@@ -84,13 +64,23 @@ int	philo_eat(t_philo *philo)
 void	philo_sleep(t_philo *philo)
 {
 	write_message(philo, msg_sleep);
-	usleep(philo->data->t_sleep * 1000);
+	//better_sleep(philo->data->t_sleep);
+	if (usleep(philo->data->t_sleep * 1000) != 0)
+		error_sleep(philo->data);
 }
 
 void	philo_think(t_philo *philo)
 {
 	write_message(philo, msg_think);
-//	usleep(philo->data.);
+}
+
+int	check_dead(t_data *data)
+{
+	pthread_mutex_lock(data->dead_monitor);
+	if (data->dead_philo == 1)
+		return (1);
+	pthread_mutex_unlock(data->dead_monitor);
+	return (0);
 }
 
 void	*routine(void *arg)
@@ -98,14 +88,16 @@ void	*routine(void *arg)
 	t_philo	*philo;
 
 	philo = (t_philo *)arg;
-
-//	while loop - while (true) - while none of the philosophers is dead 
-
-	take_forks(philo);
-	// printf("control\n");
-	philo_eat(philo);
-	philo_sleep(philo);
-	// think
-
+	while (1)
+	{
+		if (check_dead(philo->data) == 1)
+			break;
+		take_forks(philo);
+		philo_eat(philo);
+		philo_sleep(philo);
+		philo_think(philo);
+	}
 	return (NULL);
 }
+
+

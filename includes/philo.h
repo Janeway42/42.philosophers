@@ -10,7 +10,7 @@
 # include <sys/time.h>
 
 #define OK 0
-#define ERROR 1
+#define ERROR 1  // replace with -1? 
 
 #define TRUE 1
 #define FALSE 0
@@ -36,7 +36,8 @@ enum msg
 	msg_eat,
 	msg_sleep,
 	msg_think,
-	msg_die
+	msg_die,
+	msg_release  // erase when completed
 };
 
 enum err
@@ -73,6 +74,8 @@ typedef struct	s_data
 	pthread_t		*pthread_id;
 	pthread_mutex_t	*forks_lock;
 	pthread_mutex_t	*write_lock;
+	int				dead_philo;
+	pthread_mutex_t	*dead_monitor;
 	t_philo			*philos;
 }				t_data;
 
@@ -93,16 +96,25 @@ int	join_threads(t_data *data);
 */
 
 void	*routine(void *var);
+void	check_last_eaten(t_philo *philo);
 
 /*
 ** Utils
 ** ---------------------------------
 */
 
-int		ft_atoi(const char *nptr);
-int		get_time(void);
-void	write_message(t_philo *philo, enum msg message);
-int		get_elapsed_time(t_philo *philo);
+int			ft_atoi(const char *nptr);
+size_t		ft_strlen(const char *str);
+void		write_message(t_philo *philo, enum msg message);
+
+/*
+** Time
+** ---------------------------------
+*/
+
+unsigned long	get_time(void);
+unsigned long	get_elapsed_time(t_philo *philo);
+void			better_sleep(int sleep_time);
 
 /*
 ** Outcome
@@ -125,7 +137,7 @@ void	free_all(t_data *data);
 */
 
 int		error(char *str);
-int		failed_sleep(t_philo *philo);
+int		error_sleep(t_data *data);
 int		error_init_data(t_data *data, enum err error);
 int		error_threads(t_data *data, int i);
 

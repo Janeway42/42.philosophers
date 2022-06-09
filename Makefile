@@ -10,11 +10,13 @@ S_SRC	=	philo.c\
 S_PATH	=	src/
 S_OBJ	=	$(S_SRC:%.c=$(S_PATH)%.o)
 
-LIB		=	ft_atoi.c
+LIB		=	ft_atoi.c\
+			ft_strlen.c
 LIB_PATH	=	lib/
 LIB_OBJ	=	$(LIB:%.c=$(LIB_PATH)%.o)
 
 UTILS		=	write.c\
+				sleep.c\
 				death.c\
 				error.c\
 				free.c
