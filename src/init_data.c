@@ -6,7 +6,7 @@
 /*   By: cpopa <cpopa@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/05/30 11:25:36 by cpopa         #+#    #+#                 */
-/*   Updated: 2022/06/09 17:47:45 by cpopa         ########   odam.nl         */
+/*   Updated: 2022/06/13 17:35:59 by cpopa         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,7 +170,7 @@ int	init_philo(t_data *data)
 	// 	data->philos[i].right_fork = data->philos[i].id;
 	// }
 		
-		data->philos[i].last_eaten = 0;
+//		data->philos[i].last_eaten = 0;
 		data->philos[i].times_eaten = 0;
 		data->philos[i].neighbour_lock = malloc(sizeof(pthread_mutex_t));
 		if (!data->philos[i].neighbour_lock)

@@ -1,5 +1,5 @@
 NAME = philo
-CFLAGS	= -Wall -Werror -Wextra -g -fsanitize=address
+CFLAGS	= -Wall -Werror -Wextra -g -fsanitize=address #-fsanitize=thread
 LFLAGS	= -lpthread
 UNAME = $(shell uname)
 
@@ -29,7 +29,7 @@ INCLUDES_FLAG = -Iincludes
 
 
 ifeq ($(UNAME), Linux)
-	MORE_FLAGS = $(CFLAGS) $(LFLAGS)
+	MORE_FLAGS = $(CFLAGS) $(LFLAGS) 
 
 else
 	MORE_FLAGS = $(CFLAGS)

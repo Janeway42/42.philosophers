@@ -1,27 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   error.c                                            :+:    :+:            */
+/*   monitor.c                                          :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: cpopa <cpopa@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/05/30 11:25:36 by cpopa         #+#    #+#                 */
-/*   Updated: 2022/06/13 17:33:28 by cpopa         ########   odam.nl         */
+/*   Updated: 2022/06/13 17:52:46 by cpopa         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	error(char *str)
+void monitor(void *arg)
 {
-	write(2, &str, ft_strlen(str));
-	return (ERROR);
-}
+	t_philo *philo;
+	int time;
+	int i;
 
-// int	error_sleep(t_data *data)  // do I need to release mutexes in this case? 
-// {
-// 	write(2, "failed usleep\n", 15);
-// 	//printf("failed usleep\n");
-// 	free_all(data);
-// 	return (ERROR);
-// }
+	i = 0;
+	philo = (t_philo *)arg;
+
+	while (1)
+	{
+		time = get_time();
+		pthread_mutex_lock(philo->data->dead_monitor);
+		if ((time - philo->last_eaten) > philo->data->t_die)
+				philo->data->dead_philo = 1;
+		pthread_mutex_unlock(philo->data->dead_monitor);
+		usleep(50);
+	}
+	return (NULL);
+}

@@ -6,7 +6,7 @@
 /*   By: cpopa <cpopa@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/05/30 11:25:36 by cpopa         #+#    #+#                 */
-/*   Updated: 2022/06/09 17:48:03 by cpopa         ########   odam.nl         */
+/*   Updated: 2022/06/13 17:54:30 by cpopa         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,25 @@
 
 void	take_forks(t_philo *philo)
 {
-	// lock neighbours
-	pthread_mutex_lock(philo->data->philos[philo->left_fork].neighbour_lock);
-	pthread_mutex_lock(philo->data->philos[philo->right_fork].neighbour_lock);
+	int next;
+	int prev;
+
+	prev = philo->left_fork;
+	next = philo->right_fork;
+
+	// pthread_mutex_lock(philo->data->philos[next].neighbour_lock);
+	// pthread_mutex_lock(philo->data->philos[prev].neighbour_lock);
+	// printf("philo: %d, next: %d\n", philo->id, next);
+	// printf("philo: %d, prev: %d\n", philo->id, prev);
 
 	// lock forks
 	pthread_mutex_lock(&philo->data->forks_lock[philo->left_fork]);
 	write_message(philo, msg_fork);
 	pthread_mutex_lock(&philo->data->forks_lock[philo->right_fork]);
 	write_message(philo, msg_fork);
-
-	// release neighbours
-	pthread_mutex_unlock(philo->data->philos[philo->left_fork].neighbour_lock);
-	pthread_mutex_unlock(philo->data->philos[philo->right_fork].neighbour_lock);
+	
+	// pthread_mutex_unlock(philo->data->philos[prev].neighbour_lock);
+	// pthread_mutex_unlock(philo->data->philos[next].neighbour_lock);
 }
 
 void	check_last_eaten(t_philo *philo)
@@ -45,15 +51,12 @@ int	philo_eat(t_philo *philo)
 {
 
 	write_message(philo, msg_eat);
-
-	better_sleep(philo->data->t_sleep);
-	//if (usleep(philo->data->t_eat * 1000) != 0)
-	//	return (error_sleep(philo->data));
+	better_sleep(philo->data->t_eat);
 
 	// release forks
 	pthread_mutex_unlock(&philo->data->forks_lock[philo->left_fork]);
 	pthread_mutex_unlock(&philo->data->forks_lock[philo->right_fork]);
-	write_message(philo, msg_release);                              // erase when completed
+//	write_message(philo, msg_release);                              // erase when completed
 
 	philo->times_eaten += 1;
 	printf("time eaten: %d\n", philo->times_eaten);    /// erase when completed
@@ -64,9 +67,7 @@ int	philo_eat(t_philo *philo)
 void	philo_sleep(t_philo *philo)
 {
 	write_message(philo, msg_sleep);
-	//better_sleep(philo->data->t_sleep);
-	if (usleep(philo->data->t_sleep * 1000) != 0)
-		error_sleep(philo->data);
+	better_sleep(philo->data->t_sleep);
 }
 
 void	philo_think(t_philo *philo)
@@ -88,16 +89,19 @@ void	*routine(void *arg)
 	t_philo	*philo;
 
 	philo = (t_philo *)arg;
+	philo->last_eaten = get_time();
+	if (philo->id % 2 != 0)
+		better_sleep(philo->data->t_sleep - (philo->data->t_sleep * 10 / 100));
 	while (1)
 	{
-		if (check_dead(philo->data) == 1)
+		if (philo->data->dead_philo == 1)
 			break;
 		take_forks(philo);
 		philo_eat(philo);
+		if (philo->times_eaten == philo->data->nr_rounds)
+			break;
 		philo_sleep(philo);
 		philo_think(philo);
 	}
 	return (NULL);
 }
-
-
