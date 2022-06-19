@@ -1,22 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   free.c                                             :+:    :+:            */
+/*   ft_isdigit.c                                       :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: cpopa <cpopa@student.codam.nl>               +#+                     */
+/*   By: janeway <janeway@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2022/05/30 11:25:36 by cpopa         #+#    #+#                 */
-/*   Updated: 2022/06/16 16:16:36 by janeway       ########   odam.nl         */
+/*   Created: 2022/06/17 22:00:56 by janeway       #+#    #+#                 */
+/*   Updated: 2022/06/17 22:01:40 by janeway       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void	free_all(t_data *data)
+int	ft_isdigit(int c)
 {
-	destroy_mutexes(data);
-	free(data->philos);
-	free(data->pthread_id);
-	free(data->forks_lock);
+	if (c >= '0' && c <= '9')
+		return (1);
+	return (0);
 }
-

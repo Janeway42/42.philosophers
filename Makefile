@@ -4,13 +4,15 @@ LFLAGS	= -lpthread
 UNAME = $(shell uname)
 
 S_SRC	=	philo.c\
-			init_data.c\
+			init_data1.c\
 			threads.c\
-			routine.c
+			routine.c\
+			surveilance.c
 S_PATH	=	src/
 S_OBJ	=	$(S_SRC:%.c=$(S_PATH)%.o)
 
 LIB		=	ft_atoi.c\
+			ft_isdigit.c\
 			ft_strlen.c
 LIB_PATH	=	lib/
 LIB_OBJ	=	$(LIB:%.c=$(LIB_PATH)%.o)
@@ -18,6 +20,7 @@ LIB_OBJ	=	$(LIB:%.c=$(LIB_PATH)%.o)
 UTILS		=	write.c\
 				sleep.c\
 				death.c\
+				mutex_utils.c\
 				error.c\
 				free.c
 UTILS_PATH	=	utils/

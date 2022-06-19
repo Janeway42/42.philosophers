@@ -1,34 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   monitor.c                                          :+:    :+:            */
+/*   mutex_utils.c                                      :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: cpopa <cpopa@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/05/30 11:25:36 by cpopa         #+#    #+#                 */
-/*   Updated: 2022/06/13 17:52:46 by cpopa         ########   odam.nl         */
+/*   Updated: 2022/06/16 19:03:38 by janeway       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-void monitor(void *arg)
+void	destroy_mutexes(t_data *data)
 {
-	t_philo *philo;
-	int time;
-	int i;
+	int	i;
 
 	i = 0;
-	philo = (t_philo *)arg;
-
-	while (1)
+	while (i < data->nr_philo)
 	{
-		time = get_time();
-		pthread_mutex_lock(philo->data->dead_monitor);
-		if ((time - philo->last_eaten) > philo->data->t_die)
-				philo->data->dead_philo = 1;
-		pthread_mutex_unlock(philo->data->dead_monitor);
-		usleep(50);
+		pthread_mutex_destroy(&data->forks_lock[i]);
+		pthread_mutex_destroy(&data->philos[i].dead_monitor);
+		pthread_mutex_destroy(&data->philos[i].last_meal);
+		i++;
 	}
-	return (NULL);
+	pthread_mutex_destroy(&data->write_lock);
+	
 }

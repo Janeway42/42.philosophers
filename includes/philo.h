@@ -37,7 +37,8 @@ enum msg
 	msg_sleep,
 	msg_think,
 	msg_die,
-	msg_release  // erase when completed
+	msg_release,  // erase when completed
+	msg_born  // erase when completed
 };
 
 enum err
@@ -59,7 +60,9 @@ typedef struct	s_philo
 	int				right_fork;
 	int				last_eaten;
 	int				times_eaten;
-	pthread_mutex_t	*neighbour_lock;
+	pthread_mutex_t	dead_monitor;
+	pthread_mutex_t	last_meal;;
+	pthread_t		surveilance;
 	struct s_data	*data;
 }				t_philo;
 
@@ -73,9 +76,8 @@ typedef struct	s_data
 	struct timeval	start_time;
 	pthread_t		*pthread_id;
 	pthread_mutex_t	*forks_lock;
-	pthread_mutex_t	*write_lock;
+	pthread_mutex_t	write_lock;
 	int				dead_philo;
-	pthread_mutex_t	*dead_monitor;
 	t_philo			*philos;
 }				t_data;
 
@@ -96,7 +98,8 @@ int	join_threads(t_data *data);
 */
 
 void	*routine(void *var);
-void	check_last_eaten(t_philo *philo);
+int		surveilance(t_philo *philo);
+void	check_last_eaten(t_philo *philo);  // erase? 
 
 /*
 ** Utils
@@ -114,7 +117,8 @@ void		write_message(t_philo *philo, enum msg message);
 
 unsigned long	get_time(void);
 unsigned long	get_elapsed_time(t_philo *philo);
-void			better_sleep(int sleep_time);
+//void			better_sleep(int sleep_time);
+void			better_sleep(t_data *data, int sleep_time);
 
 /*
 ** Outcome
@@ -122,6 +126,13 @@ void			better_sleep(int sleep_time);
 */
 
 int		philo_dead(t_philo *philo);
+
+/*
+** Mutexes
+** ---------------------------------
+*/
+
+void	destroy_mutexes(t_data *data);
 
 /*
 ** Free
@@ -138,7 +149,10 @@ void	free_all(t_data *data);
 
 int		error(char *str);
 int		error_sleep(t_data *data);
-int		error_init_data(t_data *data, enum err error);
+
+int		error_forks(t_data *data, char *str);
+int		error_init_mutexes(t_data *data, char *str);
+
 int		error_threads(t_data *data, int i);
 
 #endif

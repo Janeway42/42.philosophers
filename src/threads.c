@@ -6,7 +6,7 @@
 /*   By: cpopa <cpopa@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/05/30 11:25:36 by cpopa         #+#    #+#                 */
-/*   Updated: 2022/06/09 14:24:20 by cpopa         ########   odam.nl         */
+/*   Updated: 2022/06/19 13:55:54 by janeway       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,25 +14,11 @@
 
 int	error_malloc_threads(t_data *data)
 {
-	int	i;
-
-	i = 0;
-	write(2, "failed malloc threads\n", 16);
-	while (i < data->nr_philo)
-	{
-		free(data->philos[i].neighbour_lock);
-		i++;
-	}
-	i = 0;
-	while (i < data->nr_philo)
-	{
-		pthread_mutex_destroy(&data->forks_lock[i]);
-		i++;
-	}
+	write(STDERR_FILENO, "failed malloc threads\n", 16);
+	destroy_mutexes(data);
 	free(data->philos);
 	free(data->forks_lock);
-	pthread_mutex_destroy(data->write_lock);
-	free(data->write_lock);
+	pthread_mutex_destroy(&data->write_lock);
 	return (ERROR);
 }
 
@@ -41,29 +27,17 @@ int	error_create_threads(t_data *data, int count)
 	int	i;
 
 	i = 0;
-	write(2, "failed threads\n", 16);
+	write(STDERR_FILENO, "failed threads\n", 16);
 	while (i < count)
 	{
 		pthread_join(data->pthread_id[i], NULL);
 		i++;
 	}
-	i = 0;
-	while (i < data->nr_philo)
-	{
-		free(data->philos[i].neighbour_lock);
-		i++;
-	}
-	i = 0;
-	while (i < data->nr_philo)
-	{
-		pthread_mutex_destroy(&data->forks_lock[i]);
-		i++;
-	}
+	destroy_mutexes(data);
 	free(data->philos);
 	free(data->forks_lock);
 	free(data->pthread_id);
-	pthread_mutex_destroy(data->write_lock);
-	free(data->write_lock);
+	pthread_mutex_destroy(&data->write_lock);
 	return (ERROR);
 }
 
@@ -79,7 +53,7 @@ int	create_pthreads(t_data *data)
 	{
 		if (pthread_create(&data->pthread_id[i], NULL,
 					&routine, &data->philos[i]) != 0)
-			error_create_threads(data, i);
+			return (error_create_threads(data, i));
 		i++;
 	}
 	return (OK);
@@ -93,6 +67,7 @@ int	join_threads(t_data *data)
 	while (i < data->nr_philo)
 	{
 		pthread_join(data->pthread_id[i], NULL);
+//		pthread_join(data->philos[i].surveilance, NULL);
 		i++;
 	}
 	return (OK);

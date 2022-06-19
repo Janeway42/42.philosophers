@@ -6,7 +6,7 @@
 /*   By: cpopa <cpopa@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/05/30 11:25:36 by cpopa         #+#    #+#                 */
-/*   Updated: 2022/06/13 17:33:28 by cpopa         ########   odam.nl         */
+/*   Updated: 2022/06/19 14:27:48 by janeway       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,22 @@
 
 int	error(char *str)
 {
-	write(2, &str, ft_strlen(str));
+	write(STDERR_FILENO, str, ft_strlen(str));
 	return (ERROR);
 }
 
-// int	error_sleep(t_data *data)  // do I need to release mutexes in this case? 
-// {
-// 	write(2, "failed usleep\n", 15);
-// 	//printf("failed usleep\n");
-// 	free_all(data);
-// 	return (ERROR);
-// }
+int error_forks(t_data *data, char *str)
+{
+	free(data->philos);
+	write(STDERR_FILENO, str, ft_strlen(str));
+	return (ERROR);
+}
+
+int error_init_mutexes(t_data *data, char *str)
+{
+	free(data->philos);
+	free(data->forks_lock);
+	destroy_mutexes(data);
+	write(STDERR_FILENO, str, ft_strlen(str));
+	return (ERROR);
+}
