@@ -6,7 +6,7 @@
 /*   By: cpopa <cpopa@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/05/30 11:25:36 by cpopa         #+#    #+#                 */
-/*   Updated: 2022/06/19 14:28:26 by janeway       ########   odam.nl         */
+/*   Updated: 2022/06/20 16:06:01 by cpopa         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,11 @@ int	init_philo(t_data *data)
 		data->philos[i].right_fork = data->philos[i].id - 1;
 		if (data->philos[i].right_fork == -1)
 			data->philos[i].right_fork = data->nr_philo - 1;
+		if (gettimeofday(&data->philos[i].start_time, NULL) != 0)
+			return (ERROR);
 		data->philos[i].last_eaten = 0;
-		data->philos[i].times_eaten = 0;		
+		data->philos[i].times_eaten = 0;
+		data->philos[i].status = ACTIVE;
 		data->philos[i].data = data;
 		i++;
 	}
@@ -42,12 +45,13 @@ int	init_mutexes(t_data *data)
 	{
 		if (pthread_mutex_init(&data->forks_lock[i], NULL) != 0)
 			return (error_init_mutexes(data, "init fork_locks fail\n"));
-		if (pthread_mutex_init(&data->philos[i].dead_monitor, NULL) != 0)
-			return (error_init_mutexes(data, "init dead_monitor fail\n"));
+		
 		if (pthread_mutex_init(&data->philos[i].last_meal, NULL) != 0)
 			return (error_init_mutexes(data, "init last_meal fail\n"));
 		i++;
 	}
+	if (pthread_mutex_init(&data->dead_monitor, NULL) != 0)
+			return (error_init_mutexes(data, "init dead_monitor fail\n"));
 	if (pthread_mutex_init(&data->write_lock, NULL) != 0)
 		return (error_init_mutexes(data, "init write_lock fail\n"));
 	return (OK);
@@ -55,8 +59,6 @@ int	init_mutexes(t_data *data)
 
 int	init_data(t_data *data)
 {
-	if (gettimeofday(&data->start_time, NULL) != 0)
-		return (error("gettimeofday fail\n"));
 	data->philos = malloc(sizeof(t_philo) * data->nr_philo);
 	if (!data->philos)
 		return (error("malloc fail\n"));
@@ -67,7 +69,8 @@ int	init_data(t_data *data)
 
 	if (init_mutexes(data) == ERROR)
 		return (ERROR);
-	init_philo(data);
+	if (init_philo(data) == ERROR)
+		return (ERROR);
 	data->dead_philo = 0;
 	return (OK);
 }

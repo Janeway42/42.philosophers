@@ -12,8 +12,8 @@
 #define OK 0
 #define ERROR 1  // replace with -1? 
 
-#define TRUE 1
-#define FALSE 0
+#define ACTIVE 1
+#define INNACTIVE 0
 
 /*
 **	typedef struct t_data:
@@ -60,9 +60,9 @@ typedef struct	s_philo
 	int				right_fork;
 	int				last_eaten;
 	int				times_eaten;
-	pthread_mutex_t	dead_monitor;
-	pthread_mutex_t	last_meal;;
-	pthread_t		surveilance;
+	struct timeval	start_time;
+	pthread_mutex_t	last_meal;
+	int				status;
 	struct s_data	*data;
 }				t_philo;
 
@@ -73,11 +73,12 @@ typedef struct	s_data
 	int				t_eat;
 	int				t_sleep;
 	int				nr_rounds;
-	struct timeval	start_time;
 	pthread_t		*pthread_id;
 	pthread_mutex_t	*forks_lock;
 	pthread_mutex_t	write_lock;
 	int				dead_philo;
+	pthread_t		surveilance;
+	pthread_mutex_t	dead_monitor;
 	t_philo			*philos;
 }				t_data;
 
@@ -98,7 +99,8 @@ int	join_threads(t_data *data);
 */
 
 void	*routine(void *var);
-int		surveilance(t_philo *philo);
+int		surveilance(t_data *data);
+void	*dead_philo(void *arg);
 void	check_last_eaten(t_philo *philo);  // erase? 
 
 /*

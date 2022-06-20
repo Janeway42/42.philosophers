@@ -6,7 +6,7 @@
 /*   By: cpopa <cpopa@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/05/30 11:25:36 by cpopa         #+#    #+#                 */
-/*   Updated: 2022/06/19 14:43:23 by janeway       ########   odam.nl         */
+/*   Updated: 2022/06/20 17:01:01 by cpopa         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,25 +81,25 @@ void	*routine(void *arg)
 	t_philo	*philo;
 
 	philo = (t_philo *)arg;
+	
+//	write_message(philo, msg_born); // erase 
 
-	write_message(philo, msg_born); // erase 
-	if (surveilance(philo) == ERROR)
-		return (NULL);
 	if (philo->data->nr_philo == 1)
 		return (single_philo(philo));
 	if ((philo->id + 1) % 2 == 0)
-		// better_sleep(philo->data, philo->data->t_eat);
-		better_sleep(philo->data, (philo->data->t_eat * 90) / 100);
+		better_sleep(philo->data, philo->data->t_eat);
+		//better_sleep(philo->data, (philo->data->t_eat * 90) / 100);
 		
 	while (philo->data->dead_philo == 0)
 	{
 		take_forks(philo);
 		philo_eat(philo);
-		if (philo->times_eaten == philo->data->nr_rounds)
+		if (philo->data->nr_rounds != -1 && philo->times_eaten == philo->data->nr_rounds)
 			break;
 		philo_sleep(philo);
 		philo_think(philo);
 	}
-	pthread_join(philo->surveilance, NULL);
+	philo->status = INNACTIVE;
+
 	return (NULL);
 }

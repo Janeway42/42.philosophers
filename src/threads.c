@@ -6,7 +6,7 @@
 /*   By: cpopa <cpopa@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/05/30 11:25:36 by cpopa         #+#    #+#                 */
-/*   Updated: 2022/06/19 13:55:54 by janeway       ########   odam.nl         */
+/*   Updated: 2022/06/20 16:53:29 by cpopa         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,15 @@ int	create_pthreads(t_data *data)
 			return (error_create_threads(data, i));
 		i++;
 	}
+	if (pthread_create(&data->surveilance, NULL,
+			&dead_philo, data)!= 0)
+		{
+			write(STDERR_FILENO, "surveilance thread fail\n", 27);
+			pthread_mutex_lock(&data->dead_monitor);
+			data->dead_philo = 1;
+			pthread_mutex_unlock(&data->dead_monitor);
+			return (ERROR);
+		}
 	return (OK);
 }
 
@@ -67,8 +76,8 @@ int	join_threads(t_data *data)
 	while (i < data->nr_philo)
 	{
 		pthread_join(data->pthread_id[i], NULL);
-//		pthread_join(data->philos[i].surveilance, NULL);
 		i++;
 	}
+		pthread_join(data->surveilance, NULL);
 	return (OK);
 }

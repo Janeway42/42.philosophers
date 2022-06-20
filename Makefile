@@ -7,7 +7,7 @@ S_SRC	=	philo.c\
 			init_data1.c\
 			threads.c\
 			routine.c\
-			surveilance.c
+			surveilance1.c
 S_PATH	=	src/
 S_OBJ	=	$(S_SRC:%.c=$(S_PATH)%.o)
 

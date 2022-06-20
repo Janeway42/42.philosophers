@@ -6,7 +6,7 @@
 /*   By: cpopa <cpopa@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/05/30 11:25:36 by cpopa         #+#    #+#                 */
-/*   Updated: 2022/06/17 22:05:29 by janeway       ########   odam.nl         */
+/*   Updated: 2022/06/20 17:01:36 by cpopa         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,12 +47,15 @@ int	get_input(int argc, char **argv, t_data *data)
 	data->t_sleep = ft_atoi(argv[4]);
 	if (data->t_sleep < 1)
 		return(error("put your glasses on and let me sleep!\n"));
+	data->nr_rounds = -1;
+//	printf("rounds before: %d\n", data->nr_rounds);
 	if (argc == 6)
 	{
 		data->nr_rounds = ft_atoi(argv[5]);
 		if (data->nr_rounds < 1)
 			return(error("don't be skimpy! let us eat more times!\n"));
 	}
+//	printf("rounds after: %d\n", data->nr_rounds);
 	return (OK);
 }
 
