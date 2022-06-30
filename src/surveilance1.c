@@ -6,16 +6,41 @@
 /*   By: cpopa <cpopa@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/05/30 11:25:36 by cpopa         #+#    #+#                 */
-/*   Updated: 2022/06/20 16:24:26 by cpopa         ########   odam.nl         */
+/*   Updated: 2022/06/30 15:19:22 by janeway       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
+int	still_alive(t_data *data)
+{
+	int	dead;
+
+	dead = 0;
+	pthread_mutex_lock(&data->dead_monitor);
+	if (data->dead_philo == 1)
+		dead = 1;
+	pthread_mutex_unlock(&data->dead_monitor);
+	return (dead);
+}
+
+static int	overeaten(t_philo *philo)
+{
+	int	elapsed_time;
+	int	eat_time;
+
+	eat_time = 0;
+	elapsed_time = (int)get_elapsed_time(philo);
+	pthread_mutex_lock(&philo->last_meal);
+	if ((elapsed_time - philo->last_eaten) > philo->data->t_die)
+		eat_time = 1;
+	pthread_mutex_unlock(&philo->last_meal);
+	return (eat_time);
+}
+
 void	*dead_philo(void *arg)
 {
 	t_data *data;
-	int	elapsed_time;
 	int		i;
 	int		innactive;
 
@@ -27,18 +52,16 @@ void	*dead_philo(void *arg)
 		innactive = 1;
 		while (i < data->nr_philo && innactive != data->nr_philo)
 		{
-			pthread_mutex_lock(&data->dead_monitor);
-			elapsed_time = (int)get_elapsed_time(&data->philos[i]);
 			if (data->philos[i].status == ACTIVE)
 			{
-				
-				if ((elapsed_time - data->philos[i].last_eaten) > data->t_die)
+				if (overeaten(&data->philos[i]) == 1)
 				{
+					pthread_mutex_lock(&data->dead_monitor);
 					data->dead_philo = 1;
+					pthread_mutex_unlock(&data->dead_monitor);
 					write_message(&data->philos[i], msg_die);
 					return (NULL);
 				}
-				
 			}
 			else if (data->philos[i].status == INNACTIVE)
 			{
@@ -46,9 +69,7 @@ void	*dead_philo(void *arg)
 				if (innactive == data->nr_philo)
 					return (NULL);
 			}
-			else
-				i++;
-			pthread_mutex_unlock(&data->dead_monitor);
+			i++;
 		}
 	}
 	return (NULL);

@@ -6,7 +6,7 @@
 /*   By: cpopa <cpopa@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/05/30 11:25:36 by cpopa         #+#    #+#                 */
-/*   Updated: 2022/06/20 17:01:01 by cpopa         ########   odam.nl         */
+/*   Updated: 2022/06/26 11:58:00 by janeway       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,12 @@
 
 void	take_forks(t_philo *philo)
 {
-
-	// philo->left_fork = philo->id;
-	// philo->right_fork = philo->id - 1;
-	// if (philo->right_fork == -1)
-	// 	philo->right_fork = philo->data->nr_philo - 1;
-
-
 	//lock forks
 	pthread_mutex_lock(&philo->data->forks_lock[philo->left_fork]);
-	if (philo->data->dead_philo == 0)
+	if (still_alive(philo->data) == 0)
 		write_message(philo, msg_fork);
 	pthread_mutex_lock(&philo->data->forks_lock[philo->right_fork]);
-	if (philo->data->dead_philo == 0)
+	if (still_alive(philo->data) == 0)
 		write_message(philo, msg_fork);
 }
 
@@ -35,7 +28,7 @@ int	philo_eat(t_philo *philo)
 	pthread_mutex_lock(&philo->last_meal);
 	philo->last_eaten = (int)get_elapsed_time(philo);  // does it need mutex protection? 
 	pthread_mutex_unlock(&philo->last_meal);
-	if (philo->data->dead_philo == 0)
+	if (still_alive(philo->data) == 0)
 	{
 		write_message(philo, msg_eat);
 		//better_sleep(philo->data->t_eat);
@@ -56,7 +49,7 @@ int	philo_eat(t_philo *philo)
 
 void	philo_sleep(t_philo *philo)
 {
-	if (philo->data->dead_philo == 0)
+	if (still_alive(philo->data) == 0)
 	{
 		write_message(philo, msg_sleep);
 		better_sleep(philo->data, philo->data->t_sleep);
@@ -65,7 +58,7 @@ void	philo_sleep(t_philo *philo)
 
 void	philo_think(t_philo *philo)
 {
-	if (philo->data->dead_philo == 0)
+	if (still_alive(philo->data) == 0)
 		write_message(philo, msg_think);
 }
 
@@ -82,15 +75,13 @@ void	*routine(void *arg)
 
 	philo = (t_philo *)arg;
 	
-//	write_message(philo, msg_born); // erase 
-
 	if (philo->data->nr_philo == 1)
 		return (single_philo(philo));
-	if ((philo->id + 1) % 2 == 0)
-		better_sleep(philo->data, philo->data->t_eat);
+	// if ((philo->id + 1) % 2 == 0)
+	// 	better_sleep(philo->data, philo->data->t_eat);
 		//better_sleep(philo->data, (philo->data->t_eat * 90) / 100);
 		
-	while (philo->data->dead_philo == 0)
+	while (still_alive(philo->data) == 0)
 	{
 		take_forks(philo);
 		philo_eat(philo);

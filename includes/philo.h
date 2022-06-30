@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        ::::::::            */
+/*   philo.h                                            :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: janeway <janeway@student.codam.nl>           +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2022/06/26 12:01:51 by janeway       #+#    #+#                 */
+/*   Updated: 2022/06/26 12:14:40 by janeway       ########   odam.nl         */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef PHILO_H
 # define PHILO_H
 
@@ -9,11 +21,11 @@
 # include <stddef.h>
 # include <sys/time.h>
 
-#define OK 0
-#define ERROR 1  // replace with -1? 
+# define OK 0
+# define ERROR 1  // replace with -1? 
 
-#define ACTIVE 1
-#define INNACTIVE 0
+# define ACTIVE 1
+# define INNACTIVE 0
 
 /*
 **	typedef struct t_data:
@@ -30,15 +42,15 @@
 **				the simulation stops when a philosopher dies.
 */
 
-enum msg
+enum e_msg
 {
 	msg_fork,
 	msg_eat,
 	msg_sleep,
 	msg_think,
 	msg_die,
-	msg_release,  // erase when completed
-	msg_born  // erase when completed
+	msg_release, // erase when completed
+	msg_born // erase when completed
 };
 
 enum err
@@ -49,11 +61,13 @@ enum err
 	err_threads
 };
 
-// input units of time are in miliseconds 
-// usleep works in mocroseconds
-// 1 milisecond = 1000 microseconds
+/*
+** input units of time are in miliseconds 
+** usleep works in mocroseconds
+** 1 milisecond = 1000 microseconds
+*/
 
-typedef struct	s_philo
+typedef struct s_philo
 {
 	int				id;
 	int				left_fork;
@@ -64,9 +78,9 @@ typedef struct	s_philo
 	pthread_mutex_t	last_meal;
 	int				status;
 	struct s_data	*data;
-}				t_philo;
+} t_philo;
 
-typedef struct	s_data
+typedef struct s_data
 {
 	int				nr_philo;
 	int				t_die;
@@ -83,34 +97,36 @@ typedef struct	s_data
 }				t_data;
 
 
-
 /*
 ** Init
 ** ---------------------------------
 */
 
-int	init_data(t_data *data);
-int	create_pthreads(t_data *data);
-int	join_threads(t_data *data);
+int				init_data(t_data *data);
+int				create_pthreads(t_data *data);
+int				join_threads(t_data *data);
 
 /*
 ** Routine
 ** ---------------------------------
 */
 
-void	*routine(void *var);
-int		surveilance(t_data *data);
-void	*dead_philo(void *arg);
-void	check_last_eaten(t_philo *philo);  // erase? 
+void			*routine(void *var);
+int				surveilance(t_data *data);
+void			*dead_philo(void *arg);
+void			check_last_eaten(t_philo *philo); // erase? 
 
 /*
 ** Utils
 ** ---------------------------------
 */
 
-int			ft_atoi(const char *nptr);
-size_t		ft_strlen(const char *str);
-void		write_message(t_philo *philo, enum msg message);
+int				ft_atoi(const char *nptr);
+char			*ft_itoa(int n);
+size_t			ft_strlen(const char *str);
+int				ft_strncmp(const char *s1, const char *s2, size_t n);
+void			write_message(t_philo *philo, enum e_msg message);
+int				still_alive(t_data *data);
 
 /*
 ** Time
@@ -119,7 +135,6 @@ void		write_message(t_philo *philo, enum msg message);
 
 unsigned long	get_time(void);
 unsigned long	get_elapsed_time(t_philo *philo);
-//void			better_sleep(int sleep_time);
 void			better_sleep(t_data *data, int sleep_time);
 
 /*
@@ -127,34 +142,34 @@ void			better_sleep(t_data *data, int sleep_time);
 ** ---------------------------------
 */
 
-int		philo_dead(t_philo *philo);
+int				philo_dead(t_philo *philo);
 
 /*
 ** Mutexes
 ** ---------------------------------
 */
 
-void	destroy_mutexes(t_data *data);
+void			destroy_mutexes(t_data *data);
 
 /*
 ** Free
 ** ---------------------------------
 */
 
-void	free_all(t_data *data);
-
+void			free_stuff(t_data *data);
+void			clean_up(t_data *data);
 
 /*
 ** Error
 ** ---------------------------------
 */
 
-int		error(char *str);
-int		error_sleep(t_data *data);
+int				error(char *str);
+int				error_sleep(t_data *data);
 
-int		error_forks(t_data *data, char *str);
-int		error_init_mutexes(t_data *data, char *str);
+int				error_forks(t_data *data, char *str);
+int				error_init_mutexes(t_data *data, char *str);
 
-int		error_threads(t_data *data, int i);
+int				error_threads(t_data *data, int i);
 
 #endif

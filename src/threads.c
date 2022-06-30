@@ -6,7 +6,7 @@
 /*   By: cpopa <cpopa@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/05/30 11:25:36 by cpopa         #+#    #+#                 */
-/*   Updated: 2022/06/20 16:53:29 by cpopa         ########   odam.nl         */
+/*   Updated: 2022/06/25 17:04:49 by janeway       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,7 @@ int	error_malloc_threads(t_data *data)
 {
 	write(STDERR_FILENO, "failed malloc threads\n", 16);
 	destroy_mutexes(data);
-	free(data->philos);
-	free(data->forks_lock);
-	pthread_mutex_destroy(&data->write_lock);
+	free_stuff(data);
 	return (ERROR);
 }
 
@@ -34,10 +32,8 @@ int	error_create_threads(t_data *data, int count)
 		i++;
 	}
 	destroy_mutexes(data);
-	free(data->philos);
-	free(data->forks_lock);
-	free(data->pthread_id);
-	pthread_mutex_destroy(&data->write_lock);
+	free_stuff(data);
+	
 	return (ERROR);
 }
 
@@ -46,6 +42,7 @@ int	create_pthreads(t_data *data)
 	int	i;
 
 	i = 0;
+
 	data->pthread_id = malloc(sizeof(pthread_t) * data->nr_philo);
 	if (!data->pthread_id)
 		return (error_malloc_threads(data));
