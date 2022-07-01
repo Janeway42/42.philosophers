@@ -6,7 +6,7 @@
 /*   By: cpopa <cpopa@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/05/30 11:25:36 by cpopa         #+#    #+#                 */
-/*   Updated: 2022/06/25 17:04:49 by janeway       ########   odam.nl         */
+/*   Updated: 2022/07/01 15:30:29 by cpopa         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,10 @@ int	create_pthreads(t_data *data)
 	data->pthread_id = malloc(sizeof(pthread_t) * data->nr_philo);
 	if (!data->pthread_id)
 		return (error_malloc_threads(data));
+	
+	
+	// pthread_mutex_lock(&data->dead_monitor);
+		
 	while (i < data->nr_philo)
 	{
 		if (pthread_create(&data->pthread_id[i], NULL,
@@ -62,6 +66,8 @@ int	create_pthreads(t_data *data)
 			pthread_mutex_unlock(&data->dead_monitor);
 			return (ERROR);
 		}
+	
+	// pthread_mutex_unlock(&data->dead_monitor);
 	return (OK);
 }
 

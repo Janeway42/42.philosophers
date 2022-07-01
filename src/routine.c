@@ -6,7 +6,7 @@
 /*   By: cpopa <cpopa@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/05/30 11:25:36 by cpopa         #+#    #+#                 */
-/*   Updated: 2022/06/26 11:58:00 by janeway       ########   odam.nl         */
+/*   Updated: 2022/07/01 15:30:18 by cpopa         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ void	philo_think(t_philo *philo)
 {
 	if (still_alive(philo->data) == 0)
 		write_message(philo, msg_think);
+	better_sleep(philo->data, 50);
 }
 
 void *single_philo(t_philo *philo)
@@ -74,12 +75,18 @@ void	*routine(void *arg)
 	t_philo	*philo;
 
 	philo = (t_philo *)arg;
+
+	// pthread_mutex_lock(&philo->data->dead_monitor);
+	// pthread_mutex_unlock(&philo->data->dead_monitor);
 	
 	if (philo->data->nr_philo == 1)
 		return (single_philo(philo));
-	// if ((philo->id + 1) % 2 == 0)
-	// 	better_sleep(philo->data, philo->data->t_eat);
-		//better_sleep(philo->data, (philo->data->t_eat * 90) / 100);
+	
+	if ((philo->id + 1) % 2 == 0)
+	{
+		write_message(philo, msg_sleep);
+		better_sleep(philo->data, philo->data->t_eat);
+	}
 		
 	while (still_alive(philo->data) == 0)
 	{

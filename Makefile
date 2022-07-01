@@ -1,13 +1,13 @@
 NAME = philo
-CFLAGS	= -Wall -Werror -Wextra -g -fsanitize=thread #-fsanitize=address #-fsanitize=thread
+CFLAGS	= -Wall -Werror -Wextra -g #-fsanitize=thread -fsanitize=address
 LFLAGS	= -pthread
 UNAME = $(shell uname)
 
 S_SRC	=	philo.c\
-			init_data1.c\
+			init_data.c\
 			threads.c\
 			routine.c\
-			surveilance1.c
+			surveilance.c
 S_PATH	=	./src/
 S_OBJ	=	$(S_SRC:%.c=$(S_PATH)%.o)
 

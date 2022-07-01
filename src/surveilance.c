@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   surveilance1.c                                     :+:    :+:            */
+/*   surveilance.c                                      :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: cpopa <cpopa@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/05/30 11:25:36 by cpopa         #+#    #+#                 */
-/*   Updated: 2022/06/30 15:19:22 by janeway       ########   odam.nl         */
+/*   Updated: 2022/07/01 15:30:21 by cpopa         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,10 +46,14 @@ void	*dead_philo(void *arg)
 
 	data = (t_data *)arg;
 	innactive = 1;
+
+	// pthread_mutex_lock(&data->dead_monitor);
+	// pthread_mutex_unlock(&data->dead_monitor);
+	
 	while (data->dead_philo == 0)
 	{
 		i = 0;
-		innactive = 1;
+		innactive = 0;
 		while (i < data->nr_philo && innactive != data->nr_philo)
 		{
 			if (data->philos[i].status == ACTIVE)
