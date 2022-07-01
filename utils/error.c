@@ -6,7 +6,7 @@
 /*   By: cpopa <cpopa@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/05/30 11:25:36 by cpopa         #+#    #+#                 */
-/*   Updated: 2022/06/19 14:27:48 by janeway       ########   odam.nl         */
+/*   Updated: 2022/07/01 17:17:55 by cpopa         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,14 +18,14 @@ int	error(char *str)
 	return (ERROR);
 }
 
-int error_forks(t_data *data, char *str)
+int	error_forks(t_data *data, char *str)
 {
 	free(data->philos);
 	write(STDERR_FILENO, str, ft_strlen(str));
 	return (ERROR);
 }
 
-int error_init_mutexes(t_data *data, char *str)
+int	error_init_mutexes(t_data *data, char *str)
 {
 	free(data->philos);
 	free(data->forks_lock);

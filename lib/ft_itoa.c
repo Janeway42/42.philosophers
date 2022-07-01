@@ -6,7 +6,7 @@
 /*   By: janeway <janeway@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/06/21 16:22:49 by janeway       #+#    #+#                 */
-/*   Updated: 2022/06/21 16:23:07 by janeway       ########   odam.nl         */
+/*   Updated: 2022/07/01 17:23:16 by cpopa         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static int	calculate(int a)
 	return (i);
 }
 
-char		*ft_itoa(int n)
+char	*ft_itoa(int n)
 {
 	char		*string;
 	int			i;

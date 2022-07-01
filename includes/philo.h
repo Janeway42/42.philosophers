@@ -6,7 +6,7 @@
 /*   By: janeway <janeway@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/06/26 12:01:51 by janeway       #+#    #+#                 */
-/*   Updated: 2022/06/26 12:14:40 by janeway       ########   odam.nl         */
+/*   Updated: 2022/07/01 17:16:15 by cpopa         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,11 +49,9 @@ enum e_msg
 	msg_sleep,
 	msg_think,
 	msg_die,
-	msg_release, // erase when completed
-	msg_born // erase when completed
 };
 
-enum err
+enum e_err
 {
 	err_philos,
 	err_forks,
@@ -74,11 +72,10 @@ typedef struct s_philo
 	int				right_fork;
 	int				last_eaten;
 	int				times_eaten;
-	struct timeval	start_time;
 	pthread_mutex_t	last_meal;
 	int				status;
 	struct s_data	*data;
-} t_philo;
+}				t_philo;
 
 typedef struct s_data
 {
@@ -87,6 +84,7 @@ typedef struct s_data
 	int				t_eat;
 	int				t_sleep;
 	int				nr_rounds;
+	struct timeval	start_time;
 	pthread_t		*pthread_id;
 	pthread_mutex_t	*forks_lock;
 	pthread_mutex_t	write_lock;
@@ -95,7 +93,6 @@ typedef struct s_data
 	pthread_mutex_t	dead_monitor;
 	t_philo			*philos;
 }				t_data;
-
 
 /*
 ** Init
@@ -112,6 +109,9 @@ int				join_threads(t_data *data);
 */
 
 void			*routine(void *var);
+int				philo_eat(t_philo *philo);
+void			philo_sleep(t_philo *philo);
+void			philo_think(t_philo *philo);
 int				surveilance(t_data *data);
 void			*dead_philo(void *arg);
 void			check_last_eaten(t_philo *philo); // erase? 

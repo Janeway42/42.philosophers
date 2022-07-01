@@ -6,7 +6,7 @@
 /*   By: janeway <janeway@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/06/21 16:12:29 by janeway       #+#    #+#                 */
-/*   Updated: 2022/06/21 16:13:02 by janeway       ########   odam.nl         */
+/*   Updated: 2022/07/01 17:24:11 by cpopa         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	ft_strncmp(const char *s1, const char *s2, size_t n)
 {
-	size_t i;
+	size_t	i;
 
 	i = 0;
 	while (1)

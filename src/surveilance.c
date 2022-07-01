@@ -6,7 +6,7 @@
 /*   By: cpopa <cpopa@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/05/30 11:25:36 by cpopa         #+#    #+#                 */
-/*   Updated: 2022/07/01 15:30:21 by cpopa         ########   odam.nl         */
+/*   Updated: 2022/07/01 16:37:49 by cpopa         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,35 +38,31 @@ static int	overeaten(t_philo *philo)
 	return (eat_time);
 }
 
+void	*check_overeaten(t_data *data, int i)
+{
+	pthread_mutex_lock(&data->dead_monitor);
+	data->dead_philo = 1;
+	pthread_mutex_unlock(&data->dead_monitor);
+	write_message(&data->philos[i], msg_die);
+	return (NULL);
+}
+
 void	*dead_philo(void *arg)
 {
-	t_data *data;
+	t_data	*data;
 	int		i;
 	int		innactive;
 
 	data = (t_data *)arg;
-	innactive = 1;
-
-	// pthread_mutex_lock(&data->dead_monitor);
-	// pthread_mutex_unlock(&data->dead_monitor);
-	
+	innactive = 0;
 	while (data->dead_philo == 0)
 	{
 		i = 0;
-		innactive = 0;
 		while (i < data->nr_philo && innactive != data->nr_philo)
 		{
-			if (data->philos[i].status == ACTIVE)
-			{
-				if (overeaten(&data->philos[i]) == 1)
-				{
-					pthread_mutex_lock(&data->dead_monitor);
-					data->dead_philo = 1;
-					pthread_mutex_unlock(&data->dead_monitor);
-					write_message(&data->philos[i], msg_die);
-					return (NULL);
-				}
-			}
+			if (data->philos[i].status == ACTIVE
+				&& overeaten(&data->philos[i]) == 1)
+				return (check_overeaten(data, i));
 			else if (data->philos[i].status == INNACTIVE)
 			{
 				innactive++;

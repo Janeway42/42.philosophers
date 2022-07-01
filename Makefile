@@ -7,6 +7,7 @@ S_SRC	=	philo.c\
 			init_data.c\
 			threads.c\
 			routine.c\
+			routine_utils.c\
 			surveilance.c
 S_PATH	=	./src/
 S_OBJ	=	$(S_SRC:%.c=$(S_PATH)%.o)

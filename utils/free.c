@@ -6,7 +6,7 @@
 /*   By: cpopa <cpopa@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/05/30 11:25:36 by cpopa         #+#    #+#                 */
-/*   Updated: 2022/06/26 11:56:08 by janeway       ########   odam.nl         */
+/*   Updated: 2022/07/01 17:18:23 by cpopa         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ void	destroy_mutexes(t_data *data)
 	}
 	pthread_mutex_destroy(&data->dead_monitor);
 	pthread_mutex_destroy(&data->write_lock);
-	
 }
 
 void	free_stuff(t_data *data)
@@ -43,4 +42,3 @@ void	clean_up(t_data *data)
 	destroy_mutexes(data);
 	free_stuff(data);
 }
-

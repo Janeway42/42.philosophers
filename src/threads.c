@@ -6,7 +6,7 @@
 /*   By: cpopa <cpopa@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/05/30 11:25:36 by cpopa         #+#    #+#                 */
-/*   Updated: 2022/07/01 15:30:29 by cpopa         ########   odam.nl         */
+/*   Updated: 2022/07/01 16:22:40 by cpopa         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,6 @@ int	error_create_threads(t_data *data, int count)
 	}
 	destroy_mutexes(data);
 	free_stuff(data);
-	
 	return (ERROR);
 }
 
@@ -42,32 +41,25 @@ int	create_pthreads(t_data *data)
 	int	i;
 
 	i = 0;
-
 	data->pthread_id = malloc(sizeof(pthread_t) * data->nr_philo);
 	if (!data->pthread_id)
 		return (error_malloc_threads(data));
-	
-	
-	// pthread_mutex_lock(&data->dead_monitor);
-		
 	while (i < data->nr_philo)
 	{
 		if (pthread_create(&data->pthread_id[i], NULL,
-					&routine, &data->philos[i]) != 0)
+				&routine, &data->philos[i]) != 0)
 			return (error_create_threads(data, i));
 		i++;
 	}
 	if (pthread_create(&data->surveilance, NULL,
-			&dead_philo, data)!= 0)
-		{
-			write(STDERR_FILENO, "surveilance thread fail\n", 27);
-			pthread_mutex_lock(&data->dead_monitor);
-			data->dead_philo = 1;
-			pthread_mutex_unlock(&data->dead_monitor);
-			return (ERROR);
-		}
-	
-	// pthread_mutex_unlock(&data->dead_monitor);
+			&dead_philo, data) != 0)
+	{
+		write(STDERR_FILENO, "surveilance thread fail\n", 27);
+		pthread_mutex_lock(&data->dead_monitor);
+		data->dead_philo = 1;
+		pthread_mutex_unlock(&data->dead_monitor);
+		return (ERROR);
+	}
 	return (OK);
 }
 
@@ -81,6 +73,6 @@ int	join_threads(t_data *data)
 		pthread_join(data->pthread_id[i], NULL);
 		i++;
 	}
-		pthread_join(data->surveilance, NULL);
+	pthread_join(data->surveilance, NULL);
 	return (OK);
 }
