@@ -6,7 +6,7 @@
 /*   By: cpopa <cpopa@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/05/30 11:25:36 by cpopa         #+#    #+#                 */
-/*   Updated: 2022/07/04 16:07:45 by cpopa         ########   odam.nl         */
+/*   Updated: 2022/07/07 11:18:25 by janeway       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	write_message(t_philo *philo, enum e_msg message)
 		"is eating",
 		"is sleeping",
 		"is thinking",
-		"is dead"};
+		"died"};
 	unsigned long	elapsed_time;
 
 	elapsed_time = get_elapsed_time(philo);
@@ -26,7 +26,9 @@ void	write_message(t_philo *philo, enum e_msg message)
 	if (message == msg_die)
 		printf("\033[0;31m%lu %d %s\033[0m\n",
 			elapsed_time, (philo->id + 1), prompt[message]);
-	else 
+	else
+	{
 		printf("%lu %d %s\n", elapsed_time, (philo->id + 1), prompt[message]);
-	sem_post(philo->data->s_write);
+		sem_post(philo->data->s_write);
+	}
 }

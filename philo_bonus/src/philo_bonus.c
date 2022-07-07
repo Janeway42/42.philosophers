@@ -6,7 +6,7 @@
 /*   By: cpopa <cpopa@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/05/30 11:25:36 by cpopa         #+#    #+#                 */
-/*   Updated: 2022/07/04 16:09:46 by cpopa         ########   odam.nl         */
+/*   Updated: 2022/07/07 11:54:10 by janeway       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ static int	get_input(int argc, char **argv, t_data *data)
 		return (error("must eat brains! lunch time is off!\n"));
 	if (check_input(argv[4], &data->t_sleep) != 0)
 		return (error("put your glasses on and let me sleep!\n"));
-	data->nr_rounds = -1;
+	data->nr_rounds = -1;                                            // ? anny possible errors? 
 	if (argc == 6)
 	{
 		if (check_input(argv[5], &data->nr_rounds) != 0)
@@ -51,22 +51,19 @@ static int	get_input(int argc, char **argv, t_data *data)
 	}
 	if (data->nr_philo < 1 || data->t_die < 0 || data->t_eat < 0
 		|| data->t_sleep < 0 || (argc == 6 && data->nr_rounds < 1))
-		return (error("input required:\nat least 1 philo, time to die, \
-			eat and sleep of at least 0\nand if mentioned at least \
-			1 round of eating\n"));
+		return (error(INPUT));
 	return (OK);
 }
 
 int	main(int argc, char **argv)
-{
+{ 
 	t_data	data;
 
 	if (get_input(argc, argv, &data) == ERROR)
 		return (ERROR);
 	if (init_data(&data) == ERROR)
 		return (ERROR);
-	if (create_processes(&data) == 1)
-		return (ERROR);
+	create_processes(&data);
 	surveillance(&data);
 	clean_up(&data);
 	return (OK);

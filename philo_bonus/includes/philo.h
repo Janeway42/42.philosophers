@@ -6,7 +6,7 @@
 /*   By: janeway <janeway@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/06/26 12:01:51 by janeway       #+#    #+#                 */
-/*   Updated: 2022/07/04 16:08:22 by cpopa         ########   odam.nl         */
+/*   Updated: 2022/07/07 18:35:15 by janeway       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,10 @@
 # include <limits.h>
 # include <pthread.h>
 # include <stddef.h>
+# include <fcntl.h>
 # include <sys/time.h>
+# include <sys/types.h>
+# include <sys/wait.h>
 # include <semaphore.h>
 # include <signal.h>
 
@@ -29,10 +32,15 @@
 # define ACTIVE 1
 # define INNACTIVE 0
 
-# define DIED -1
+# define DEAD 5
+# define FULL 7
 
-#define FORKS "FORKS"
-#define WRITE "WRITE"
+# define FORKS "FORKS"
+# define WRITE "WRITE"
+
+# define INPUT "input required: nr philo > 0, time to die > -1,\
+time to eat > -1, time to sleep > -1, nr times to \
+eat (optional) > 0\n"
 
 /*
 **	typedef struct t_data:
@@ -75,12 +83,12 @@ enum e_err
 typedef struct s_philo
 {
 	int				id;
-	int				left_fork;
-	int				right_fork;
 	int				last_eaten;
 	int				times_eaten;
+	sem_t			*s_dead;
+	char			*name_dead;
 	sem_t			*s_last_meal;
-	pthread_t		*thread;
+	char			*name_last_meal;
 	int				status;
 	struct s_data	*data;
 }				t_philo;
@@ -93,11 +101,10 @@ typedef struct s_data
 	int				t_sleep;
 	int				nr_rounds;
 	struct timeval	start_time;
-
 	pid_t			*process_id;
 	sem_t			*s_forks;
 	sem_t			*s_write;
-
+	
 	t_philo			*philos;
 }				t_data;
 
@@ -107,6 +114,13 @@ typedef struct s_data
 */
 
 int				init_data(t_data *data);
+int				init_semaphores(t_data *data);
+
+/*
+** Create Processes
+** ---------------------------------
+*/
+
 int				create_processes(t_data *data);
 
 /*
@@ -115,21 +129,9 @@ int				create_processes(t_data *data);
 */
 
 void			*routine(void *var);
-
-void			philo_eat(t_philo *philo);
+int				philo_eat(t_philo *philo);
 void			philo_sleep(t_philo *philo);
 void			philo_think(t_philo *philo);
-
-int				surveilance(t_data *data);
-void			*dead_philo(void *arg);
-
-/*
-** Surveillance
-** ---------------------------------
-*/
-
-int				surveillance(t_data *data);
-int				overeaten(t_philo *philo);
 
 /*
 ** Utils
@@ -139,8 +141,8 @@ int				overeaten(t_philo *philo);
 int				ft_atoi(const char *nptr);
 char			*ft_itoa(int n);
 size_t			ft_strlen(const char *str);
+char			*ft_strdup(const char *s);
 int				ft_strncmp(const char *s1, const char *s2, size_t n);
-void			write_message(t_philo *philo, enum e_msg message);
 
 /*
 ** Time
@@ -152,11 +154,26 @@ unsigned long	get_elapsed_time(t_philo *philo);
 void			better_sleep(int sleep_time);
 
 /*
+** Write
+** ---------------------------------
+*/
+
+void			write_message(t_philo *philo, enum e_msg message);
+
+/*
+** Surveillance
+** ---------------------------------
+*/
+
+int				surveillance(t_data *data);
+
+/*
 ** Free
 ** ---------------------------------
 */
 
 void			free_stuff(t_data *data);
+void 			close_semaphore(sem_t *sem, char *name);
 void			clean_up(t_data *data);
 
 /*
@@ -165,5 +182,8 @@ void			clean_up(t_data *data);
 */
 
 int				error(char *str);
+int				error_free(char *str, t_data *data);
+int				error_semaphore(char *str, t_data *data);
+int				error_exit(char *str);
 
 #endif

@@ -15,6 +15,7 @@ S_OBJ	=	$(S_SRC:%.c=$(S_PATH)%.o)
 LIB		=	ft_atoi.c\
 			ft_itoa.c\
 			ft_isdigit.c\
+			ft_strdup.c\
 			ft_strncmp.c\
 			ft_strlen.c
 LIB_PATH	=	./lib/
@@ -44,7 +45,7 @@ all: $(NAME)
 
 $(NAME): $(OBJ_FILES)
 	@$(CC) $(MORE_FLAGS) $(OBJ_FILES) $(INCLUDES_FLAG) -o $(NAME)
-	@echo "\033[0;31mphilo ready\033[0m"
+	@echo "\033[0;31mphilo_bonus ready\033[0m"
 
 %.o: %.c $(HEADER_FILES)
 	@$(CC) $(MORE_FLAGS) $(INCLUDES_FLAG) -c $< -o $@ 
