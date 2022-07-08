@@ -1,24 +1,22 @@
-NAME = philo_bonus
-CFLAGS	= -Wall -Werror -Wextra -g -fsanitize=thread #-fsanitize=address
+NAME = philo
+CFLAGS	= -Wall -Werror -Wextra -g #-fsanitize=address #-fsanitize=thread 
 LFLAGS	= -pthread
 UNAME = $(shell uname)
 
-S_SRC	=	philo_bonus.c\
+S_SRC	=	philo.c\
 			init_data.c\
-			create_processes.c\
-			init_data_processes.c\
+			threads.c\
 			routine.c\
 			routine_utils.c\
-			surveillance.c
+			surveilance.c
 S_PATH	=	./src/
 S_OBJ	=	$(S_SRC:%.c=$(S_PATH)%.o)
 
 BASICS		=	ft_atoi.c\
-			ft_itoa.c\
-			ft_isdigit.c\
-			ft_strdup.c\
-			ft_strncmp.c\
-			ft_strlen.c
+				ft_itoa.c\
+				ft_isdigit.c\
+				ft_strncmp.c\
+				ft_strlen.c
 BASICS_PATH	=	./basics/
 BASICS_OBJ	=	$(BASICS:%.c=$(BASICS_PATH)%.o)
 
@@ -46,7 +44,7 @@ all: $(NAME)
 
 $(NAME): $(OBJ_FILES)
 	@$(CC) $(MORE_FLAGS) $(OBJ_FILES) $(INCLUDES_FLAG) -o $(NAME)
-	@echo "\033[0;31mphilo_bonus ready\033[0m"
+	@echo "\033[0;31mphilo ready\033[0m"
 
 %.o: %.c $(HEADER_FILES)
 	@$(CC) $(MORE_FLAGS) $(INCLUDES_FLAG) -c $< -o $@ 

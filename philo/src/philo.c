@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   philo_bonus.c                                      :+:    :+:            */
+/*   philo.c                                            :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: cpopa <cpopa@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/05/30 11:25:36 by cpopa         #+#    #+#                 */
-/*   Updated: 2022/07/08 15:24:00 by cpopa         ########   odam.nl         */
+/*   Updated: 2022/07/08 12:14:09 by cpopa         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/philo.h"
+#include "philo.h"
 
 static int	check_input(char *input, int *str)
 {
@@ -63,8 +63,9 @@ int	main(int argc, char **argv)
 		return (ERROR);
 	if (init_data(&data) == ERROR)
 		return (ERROR);
-	create_processes(&data);
-	surveillance(&data);
+	if (create_pthreads(&data) == ERROR)
+		return (ERROR);
+	join_threads(&data);
 	clean_up(&data);
 	return (OK);
 }

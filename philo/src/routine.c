@@ -6,24 +6,26 @@
 /*   By: cpopa <cpopa@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/05/30 11:25:36 by cpopa         #+#    #+#                 */
-/*   Updated: 2022/07/08 15:24:11 by cpopa         ########   odam.nl         */
+/*   Updated: 2022/07/08 12:46:45 by cpopa         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/philo.h"
+#include "philo.h"
 
-static void	take_forks(t_philo *philo)
+void	take_forks(t_philo *philo)
 {
-	sem_wait(philo->data->s_forks);
-	write_message(philo, msg_fork);
-	sem_wait(philo->data->s_forks);
-	write_message(philo, msg_fork);
+	pthread_mutex_lock(&philo->data->forks_lock[philo->left_fork]);
+	if (still_alive(philo->data) == 0)
+		write_message(philo, msg_fork);
+	pthread_mutex_lock(&philo->data->forks_lock[philo->right_fork]);
+	if (still_alive(philo->data) == 0)
+		write_message(philo, msg_fork);
 }
 
 void	*single_philo(t_philo *philo)
 {
 	write_message(philo, msg_fork);
-	better_sleep(philo->data->t_die);
+	better_sleep(philo->data, philo->data->t_die);
 	return (NULL);
 }
 
@@ -37,19 +39,15 @@ void	*routine(void *arg)
 	if ((philo->id + 1) % 2 == 0)
 	{
 		write_message(philo, msg_sleep);
-		better_sleep(philo->data->t_eat / 2);
+		better_sleep(philo->data, (philo->data->t_eat / 2));
 	}
-	while (1)
+	while (still_alive(philo->data) == 0)
 	{
 		take_forks(philo);
 		philo_eat(philo);
 		if (philo->data->nr_rounds != -1
 			&& philo->times_eaten == philo->data->nr_rounds)
-			{
-				close_semaphore(philo->s_last_meal, philo->name_last_meal);
-				close_semaphore(philo->s_dead, philo->name_dead);
-				exit(FULL);
-			}
+			break ;
 		philo_sleep(philo);
 		philo_think(philo);
 	}
