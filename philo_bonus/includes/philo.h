@@ -6,7 +6,7 @@
 /*   By: janeway <janeway@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/06/26 12:01:51 by janeway       #+#    #+#                 */
-/*   Updated: 2022/07/08 14:09:50 by cpopa         ########   odam.nl         */
+/*   Updated: 2022/07/12 17:18:32 by cpopa         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,6 +115,7 @@ typedef struct s_data
 
 int				init_data(t_data *data);
 int				init_semaphores(t_data *data);
+sem_t			*open_semaphore(sem_t **address, char *name, int size);
 
 /*
 ** Create Processes
@@ -167,6 +168,7 @@ void			write_message(t_philo *philo, enum e_msg message);
 */
 
 int				surveillance(t_data *data);
+int				kill_processes(t_data *data);
 
 /*
 ** Free
@@ -186,5 +188,6 @@ int				error(char *str);
 int				error_free(char *str, t_data *data);
 int				error_semaphore(char *str, t_data *data);
 int				error_exit(char *str);
+int				general_error(t_data *data, char *str);
 
 #endif

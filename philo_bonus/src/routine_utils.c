@@ -6,7 +6,7 @@
 /*   By: cpopa <cpopa@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/05/30 11:25:36 by cpopa         #+#    #+#                 */
-/*   Updated: 2022/07/08 15:24:06 by cpopa         ########   odam.nl         */
+/*   Updated: 2022/07/12 17:36:15 by cpopa         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@ int	philo_eat(t_philo *philo)
 	sem_wait(philo->s_last_meal);
 	philo->last_eaten = (int)get_elapsed_time(philo);
 	sem_post(philo->s_last_meal);
-	
 	sem_wait(philo->s_dead);
 	write_message(philo, msg_eat);
 	better_sleep(philo->data->t_eat);

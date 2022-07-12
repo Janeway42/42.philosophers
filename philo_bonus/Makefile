@@ -1,12 +1,11 @@
 NAME = philo_bonus
-CFLAGS	= -Wall -Werror -Wextra -g -fsanitize=thread #-fsanitize=address
+CFLAGS	= -Wall -Werror -Wextra -g #-fsanitize=thread #-fsanitize=address
 LFLAGS	= -pthread
 UNAME = $(shell uname)
 
 S_SRC	=	philo_bonus.c\
 			init_data.c\
 			create_processes.c\
-			init_data_processes.c\
 			routine.c\
 			routine_utils.c\
 			surveillance.c
@@ -14,11 +13,11 @@ S_PATH	=	./src/
 S_OBJ	=	$(S_SRC:%.c=$(S_PATH)%.o)
 
 BASICS		=	ft_atoi.c\
-			ft_itoa.c\
-			ft_isdigit.c\
-			ft_strdup.c\
-			ft_strncmp.c\
-			ft_strlen.c
+				ft_itoa.c\
+				ft_isdigit.c\
+				ft_strdup.c\
+				ft_strncmp.c\
+				ft_strlen.c
 BASICS_PATH	=	./basics/
 BASICS_OBJ	=	$(BASICS:%.c=$(BASICS_PATH)%.o)
 

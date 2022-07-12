@@ -6,7 +6,7 @@
 /*   By: cpopa <cpopa@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/05/30 11:25:36 by cpopa         #+#    #+#                 */
-/*   Updated: 2022/07/08 15:24:23 by cpopa         ########   odam.nl         */
+/*   Updated: 2022/07/12 17:01:50 by cpopa         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,5 +39,12 @@ int	error_semaphore(char *str, t_data *data)
 int	error_exit(char *str)
 {
 	write(STDERR_FILENO, str, ft_strlen(str));
-	exit(1);
+	exit(ERROR);
+}
+
+int	general_error(t_data *data, char *str)
+{
+	kill_processes(data);
+	write(STDERR_FILENO, str, ft_strlen(str));
+	exit(ERROR);
 }

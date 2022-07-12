@@ -6,7 +6,7 @@
 /*   By: cpopa <cpopa@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/05/30 11:25:36 by cpopa         #+#    #+#                 */
-/*   Updated: 2022/07/08 16:32:02 by cpopa         ########   odam.nl         */
+/*   Updated: 2022/07/12 17:19:27 by cpopa         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,35 +26,29 @@ static int	overeaten(t_philo *philo)
 	return (eat_time);
 }
 
-// t_philo	*init_data_process(t_data *data, int i)
-// {
-// 	t_philo	*philo;
+t_philo	*init_data_process(t_data *data, int i)
+{
+	t_philo	*philo;
 
-// 	philo = malloc(sizeof(t_philo));
-// 	if (!philo)
-// 		error_exit("failed malloc - init_philo_process\n");
-// 	philo->data = data;
-// 	philo->id = i;
-// 	philo->times_eaten = 0;
-// 	philo->status = ACTIVE;
-// 	philo->last_eaten = (int)get_elapsed_time(philo);
-// 	philo->name_last_meal = ft_itoa(philo->id);
-// 	if (!philo->name_last_meal)
-// 		error_exit("strdup fail: name_last_meal\n");
-// 	sem_unlink(philo->name_last_meal);
-// 	philo->s_last_meal = sem_open(philo->name_last_meal,
-// 			O_CREAT | O_EXCL, 0777, 1);
-// 	if (philo->s_last_meal == SEM_FAILED)
-// 		error_exit("sem_open fail: s_last_meal\n");
-// 	philo->name_dead = ft_itoa(philo->id + 1000);
-// 	if (!philo->name_dead)
-// 		error_exit("strdup fail: name_dead\n");
-// 	sem_unlink(philo->name_dead);
-// 	philo->s_dead = sem_open(philo->name_dead, O_CREAT | O_EXCL, 0777, 1);
-// 	if (philo->s_dead == SEM_FAILED)
-// 		error_exit("sem failed: s_dead\n");
-// 	return (philo);
-// }
+	philo = malloc(sizeof(t_philo));
+	if (!philo)
+		error_exit("failed malloc - init_philo_process\n");
+	philo->data = data;
+	philo->id = i;
+	philo->name_dead = ft_itoa(philo->id + 1000);
+	if (!philo->name_dead)
+		error_exit("strdup fail: name_dead\n");
+	philo->s_dead = open_semaphore(&philo->s_dead, philo->name_dead, 1);
+	philo->name_last_meal = ft_itoa(philo->id);
+	if (!philo->name_last_meal)
+		error_exit("strdup fail: name_last_meal\n");
+	philo->s_last_meal = open_semaphore(&philo->s_last_meal,
+			philo->name_last_meal, 1);
+	philo->times_eaten = 0;
+	philo->status = ACTIVE;
+	philo->last_eaten = (int)get_elapsed_time(philo);
+	return (philo);
+}
 
 static void	clean_up_process(t_philo *philo, pthread_t *thread)
 {
@@ -72,7 +66,6 @@ int	execute_process(t_data *data, int i)
 
 	free(data->philos);
 	philo = init_data_process(data, i);
-	
 	thread = malloc(sizeof(pthread_t));
 	if (!thread)
 		error_exit("malloc fail: thread\n");
@@ -86,8 +79,6 @@ int	execute_process(t_data *data, int i)
 		if (philo->status == ACTIVE && overeaten(philo) == 1)
 		{
 			write_message(philo, msg_die);
-			close_semaphore(philo->s_last_meal, philo->name_last_meal);
-			close_semaphore(philo->s_dead, philo->name_dead);
 			exit(DEAD);
 		}
 		sem_post(philo->s_dead);

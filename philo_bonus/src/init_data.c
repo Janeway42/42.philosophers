@@ -6,20 +6,27 @@
 /*   By: cpopa <cpopa@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/05/30 11:25:36 by cpopa         #+#    #+#                 */
-/*   Updated: 2022/07/08 15:23:56 by cpopa         ########   odam.nl         */
+/*   Updated: 2022/07/12 17:34:38 by cpopa         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/philo.h"
 
+sem_t	*open_semaphore(sem_t **address, char *name, int size)
+{
+	sem_unlink(name);
+	*address = sem_open(name, O_CREAT | O_EXCL, 0777, size);
+	if (*address == SEM_FAILED)
+		error_exit("sem_open fail\n");
+	return (*address);
+}
+
 int	init_semaphores(t_data *data)
 {
-	sem_unlink("FORKS");
-	sem_unlink("WRITE");
-	data->s_forks = sem_open(FORKS, O_CREAT | O_EXCL, 0777, data->nr_philo);
+	data->s_forks = open_semaphore(&data->s_forks, "FORKS", data->nr_philo);
 	if (data->s_forks == SEM_FAILED)
 		return (error_semaphore("sem failed: s_forks\n", data));
-	data->s_write = sem_open(WRITE, O_CREAT | O_EXCL, 0777, 1);
+	data->s_write = open_semaphore(&data->s_write, "WRITE", 1);
 	if (data->s_write == SEM_FAILED)
 		return (error_semaphore("sem failed: s_write\n", data));
 	return (OK);
