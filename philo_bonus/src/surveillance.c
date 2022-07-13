@@ -6,7 +6,7 @@
 /*   By: cpopa <cpopa@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/05/30 11:25:36 by cpopa         #+#    #+#                 */
-/*   Updated: 2022/07/12 17:01:32 by cpopa         ########   odam.nl         */
+/*   Updated: 2022/07/13 11:51:40 by cpopa         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,8 @@ int	kill_processes(t_data *data)
 	i = 0;
 	while (i < data->nr_philo)
 	{
-		kill(data->process_id[i], SIGKILL);
+		if (kill(data->process_id[i], SIGKILL) > 0)
+			return (ERROR);
 		i++;
 	}
 	return (OK);

@@ -6,35 +6,11 @@
 /*   By: cpopa <cpopa@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/05/30 11:25:36 by cpopa         #+#    #+#                 */
-/*   Updated: 2022/07/01 16:22:40 by cpopa         ########   odam.nl         */
+/*   Updated: 2022/07/13 12:24:10 by cpopa         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-int	error_malloc_threads(t_data *data)
-{
-	write(STDERR_FILENO, "failed malloc threads\n", 16);
-	destroy_mutexes(data);
-	free_stuff(data);
-	return (ERROR);
-}
-
-int	error_create_threads(t_data *data, int count)
-{
-	int	i;
-
-	i = 0;
-	write(STDERR_FILENO, "failed threads\n", 16);
-	while (i < count)
-	{
-		pthread_join(data->pthread_id[i], NULL);
-		i++;
-	}
-	destroy_mutexes(data);
-	free_stuff(data);
-	return (ERROR);
-}
 
 int	create_pthreads(t_data *data)
 {
@@ -43,7 +19,7 @@ int	create_pthreads(t_data *data)
 	i = 0;
 	data->pthread_id = malloc(sizeof(pthread_t) * data->nr_philo);
 	if (!data->pthread_id)
-		return (error_malloc_threads(data));
+		return (error_malloc_threads(data, "failed malloc threads\n"));
 	while (i < data->nr_philo)
 	{
 		if (pthread_create(&data->pthread_id[i], NULL,

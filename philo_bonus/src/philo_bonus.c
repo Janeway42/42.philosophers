@@ -6,7 +6,7 @@
 /*   By: cpopa <cpopa@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/05/30 11:25:36 by cpopa         #+#    #+#                 */
-/*   Updated: 2022/07/08 15:24:00 by cpopa         ########   odam.nl         */
+/*   Updated: 2022/07/13 11:51:06 by cpopa         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,8 @@ int	main(int argc, char **argv)
 	if (init_data(&data) == ERROR)
 		return (ERROR);
 	create_processes(&data);
-	surveillance(&data);
+	if (surveillance(&data) == ERROR)
+		return (ERROR);
 	clean_up(&data);
 	return (OK);
 }

@@ -6,7 +6,7 @@
 /*   By: janeway <janeway@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/06/26 12:01:51 by janeway       #+#    #+#                 */
-/*   Updated: 2022/07/08 12:45:12 by cpopa         ########   odam.nl         */
+/*   Updated: 2022/07/13 13:15:19 by cpopa         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,12 +116,9 @@ void			*routine(void *var);
 int				philo_eat(t_philo *philo);
 void			philo_sleep(t_philo *philo);
 void			philo_think(t_philo *philo);
-int				surveilance(t_data *data);
-void			*dead_philo(void *arg);
-void			check_last_eaten(t_philo *philo); // erase? 
 
 /*
-** Utils
+** Basics
 ** ---------------------------------
 */
 
@@ -129,8 +126,13 @@ int				ft_atoi(const char *nptr);
 char			*ft_itoa(int n);
 size_t			ft_strlen(const char *str);
 int				ft_strncmp(const char *s1, const char *s2, size_t n);
+
+/*
+** Utils
+** ---------------------------------
+*/
+
 void			write_message(t_philo *philo, enum e_msg message);
-int				still_alive(t_data *data);
 
 /*
 ** Time
@@ -142,24 +144,20 @@ unsigned long	get_elapsed_time(t_philo *philo);
 void			better_sleep(t_data *data, int sleep_time);
 
 /*
-** Outcome
+** Surveillance
 ** ---------------------------------
 */
 
-int				philo_dead(t_philo *philo);
-
-/*
-** Mutexes
-** ---------------------------------
-*/
-
-void			destroy_mutexes(t_data *data);
+int				surveilance(t_data *data);
+int				still_alive(t_data *data);
+void			*dead_philo(void *arg);
 
 /*
 ** Free
 ** ---------------------------------
 */
 
+void			destroy_mutexes(t_data *data);
 void			free_stuff(t_data *data);
 void			clean_up(t_data *data);
 
@@ -170,10 +168,9 @@ void			clean_up(t_data *data);
 
 int				error(char *str);
 int				error_sleep(t_data *data);
-
 int				error_forks(t_data *data, char *str);
 int				error_init_mutexes(t_data *data, char *str);
-
-int				error_threads(t_data *data, int i);
+int				error_malloc_threads(t_data *data, char *str);
+int				error_create_threads(t_data *data, int count);
 
 #endif
