@@ -6,7 +6,7 @@
 /*   By: janeway <janeway@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/06/26 12:01:51 by janeway       #+#    #+#                 */
-/*   Updated: 2022/07/13 13:15:19 by cpopa         ########   odam.nl         */
+/*   Updated: 2022/07/18 15:06:51 by cpopa         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,6 +141,7 @@ void			write_message(t_philo *philo, enum e_msg message);
 
 unsigned long	get_time(void);
 unsigned long	get_elapsed_time(t_philo *philo);
+// void			better_sleep(int sleep_time);
 void			better_sleep(t_data *data, int sleep_time);
 
 /*

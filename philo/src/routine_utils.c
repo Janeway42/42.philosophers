@@ -6,7 +6,7 @@
 /*   By: cpopa <cpopa@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/05/30 11:25:36 by cpopa         #+#    #+#                 */
-/*   Updated: 2022/07/13 13:25:38 by cpopa         ########   odam.nl         */
+/*   Updated: 2022/07/18 17:02:41 by cpopa         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,6 @@ void	philo_think(t_philo *philo)
 	if (still_alive(philo->data) == 0)
 	{
 		write_message(philo, msg_think);
-		usleep(50);
+		usleep(100);
 	}
 }

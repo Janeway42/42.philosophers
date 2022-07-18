@@ -6,7 +6,7 @@
 /*   By: cpopa <cpopa@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/05/30 11:25:36 by cpopa         #+#    #+#                 */
-/*   Updated: 2022/07/13 13:14:44 by cpopa         ########   odam.nl         */
+/*   Updated: 2022/07/18 17:02:26 by cpopa         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	*routine(void *arg)
 		return (single_philo(philo));
 	if ((philo->id + 1) % 2 == 0)
 	{
-		write_message(philo, msg_sleep);
+		write_message(philo, msg_think);
 		better_sleep(philo->data, (philo->data->t_eat / 2));
 	}
 	while (still_alive(philo->data) == 0)

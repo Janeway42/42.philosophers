@@ -6,7 +6,7 @@
 /*   By: cpopa <cpopa@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/05/30 11:25:36 by cpopa         #+#    #+#                 */
-/*   Updated: 2022/07/08 12:36:26 by cpopa         ########   odam.nl         */
+/*   Updated: 2022/07/18 14:17:17 by cpopa         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ void	*dead_philo(void *arg)
 			}
 			i++;
 		}
+		usleep(2000);
 	}
 	return (NULL);
 }
