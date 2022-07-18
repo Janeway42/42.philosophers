@@ -6,7 +6,7 @@
 /*   By: cpopa <cpopa@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/05/30 11:25:36 by cpopa         #+#    #+#                 */
-/*   Updated: 2022/07/17 21:10:06 by janeway       ########   odam.nl         */
+/*   Updated: 2022/07/18 12:50:00 by cpopa         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ static int	error_philo_threads(t_data *data, int count, char *str)
 	int	i;
 
 	i = 0;
-	write(STDERR_FILENO, str, 16);
+	write(STDERR_FILENO, str, ft_strlen(str));
 	while (i < count)
 	{
 		pthread_join(data->pthread_id[i], NULL);

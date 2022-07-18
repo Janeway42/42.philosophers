@@ -6,7 +6,7 @@
 /*   By: cpopa <cpopa@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/05/30 11:25:36 by cpopa         #+#    #+#                 */
-/*   Updated: 2022/07/17 21:32:29 by janeway       ########   odam.nl         */
+/*   Updated: 2022/07/18 13:09:32 by cpopa         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,16 @@
 
 void	take_forks(t_philo *philo)
 {
-	pthread_mutex_lock(&philo[philo->right_fork].attempt_lock);
-	pthread_mutex_lock(&philo[philo->left_fork].attempt_lock);
+	// pthread_mutex_lock(&philo[philo->right_fork].attempt_lock);
+	// pthread_mutex_lock(&philo[philo->left_fork].attempt_lock);
 
 	pthread_mutex_lock(&philo->data->forks_lock[philo->left_fork]);
 	write_message(philo, msg_fork);
 	pthread_mutex_lock(&philo->data->forks_lock[philo->right_fork]);
 	write_message(philo, msg_fork);
 
-	pthread_mutex_unlock(&philo[philo->left_fork].attempt_lock);
-	pthread_mutex_unlock(&philo[philo->right_fork].attempt_lock);
+	// pthread_mutex_unlock(&philo[philo->left_fork].attempt_lock);
+	// pthread_mutex_unlock(&philo[philo->right_fork].attempt_lock);
 }
 
 void	*single_philo(t_philo *philo)

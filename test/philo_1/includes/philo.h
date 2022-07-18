@@ -6,7 +6,7 @@
 /*   By: janeway <janeway@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/06/26 12:01:51 by janeway       #+#    #+#                 */
-/*   Updated: 2022/07/17 21:25:20 by janeway       ########   odam.nl         */
+/*   Updated: 2022/07/18 13:09:26 by cpopa         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 # include <sys/time.h>
 
 # define OK 0
-# define ERROR 1  // replace with -1? 
+# define ERROR 1
 
 # define ACTIVE 1
 # define INNACTIVE 0
@@ -155,7 +155,7 @@ void			*dead_philo(void *arg);
 int				check_overeaten(t_philo *philo);
 void			*overeaten(t_data *data, int i);
 
-/*pthread_mutex_init(&data->forks_lock[i], NULL)
+/*
 ** Free
 ** ---------------------------------
 */
@@ -176,6 +176,5 @@ int				error_mutex(t_data *data, char *str);
 
 int				error_sleep(t_data *data);
 int				error_forks(t_data *data, char *str);
-int				error_malloc_threads(t_data *data, char *str);
 
 #endif

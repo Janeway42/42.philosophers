@@ -6,7 +6,7 @@
 /*   By: cpopa <cpopa@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/05/30 11:25:36 by cpopa         #+#    #+#                 */
-/*   Updated: 2022/07/17 21:11:31 by janeway       ########   odam.nl         */
+/*   Updated: 2022/07/18 12:50:25 by cpopa         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,14 +26,6 @@ int	error_free(char *str, t_data *data)
 }
 
 int	error_mutex(t_data *data, char *str)
-{
-	write(STDERR_FILENO, str, ft_strlen(str));
-	destroy_mutexes(data);
-	free_allocated(data);
-	return (ERROR);
-}
-
-int	error_malloc_threads(t_data *data, char *str)
 {
 	write(STDERR_FILENO, str, ft_strlen(str));
 	destroy_mutexes(data);

@@ -6,7 +6,7 @@
 /*   By: cpopa <cpopa@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/05/30 11:25:36 by cpopa         #+#    #+#                 */
-/*   Updated: 2022/07/17 20:57:23 by janeway       ########   odam.nl         */
+/*   Updated: 2022/07/18 13:02:08 by cpopa         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,20 @@ void	write_message(t_philo *philo, enum e_msg message)
 	if (message == msg_die)
 		printf("\033[0;31m%lu %d %s\033[0m\n",
 			elapsed_time, (philo->id + 1), prompt[message]);
-	else if (still_alive(philo->data) == 0)
+	if (still_alive(philo->data) == 0)
 		printf("%lu %d %s\n", elapsed_time, (philo->id + 1), prompt[message]);
+
+
+
+	// if (still_alive(philo->data) == 0)
+	// 	printf("%lu %d %s\n", elapsed_time, (philo->id + 1), prompt[message]);
+	// else
+	// {
+	// 	if (message == msg_die)
+	// 	printf("\033[0;31m%lu %d %s\033[0m\n",
+	// 		elapsed_time, (philo->id + 1), prompt[message]);
+	// 	else
+	// }
+
 	pthread_mutex_unlock(&philo->data->write_lock);
 }
