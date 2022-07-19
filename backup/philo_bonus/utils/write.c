@@ -1,44 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   free.c                                             :+:    :+:            */
+/*   write.c                                            :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: cpopa <cpopa@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/05/30 11:25:36 by cpopa         #+#    #+#                 */
-/*   Updated: 2022/07/19 13:17:44 by janeway       ########   odam.nl         */
+/*   Updated: 2022/07/08 15:24:37 by cpopa         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "../includes/philo.h"
 
-void	destroy_mutexes(t_data *data)
+void	write_message(t_philo *philo, enum e_msg message)
 {
-	int	i;
+	const char		*prompt[] = {"has taken a fork",
+		"is eating",
+		"is sleeping",
+		"is thinking",
+		"died"};
+	unsigned long	elapsed_time;
 
-	i = 0;
-	while (i < data->nr_philo)
+	elapsed_time = get_elapsed_time(philo);
+	sem_wait(philo->data->s_write);
+	if (message == msg_die)
+		printf("\033[0;31m%lu %d %s\033[0m\n",
+			elapsed_time, (philo->id + 1), prompt[message]);
+	else
 	{
-		pthread_mutex_destroy(&data->forks_lock[i]);
-		pthread_mutex_destroy(&data->philos[i].meal_lock);
-		i++;
+		printf("%lu %d %s\n", elapsed_time, (philo->id + 1), prompt[message]);
+		sem_post(philo->data->s_write);
 	}
-	pthread_mutex_destroy(&data->dead_lock);
-	pthread_mutex_destroy(&data->write_lock);
-}
-
-void	free_memory(t_data *data)
-{
-	if (data->philos)
-		free(data->philos);
-	if (data->forks_lock)
-		free(data->forks_lock);
-	if (data->pthread_id)
-		free(data->pthread_id);
-}
-
-void	clean_up(t_data *data)
-{
-	destroy_mutexes(data);
-	free_memory(data);
 }

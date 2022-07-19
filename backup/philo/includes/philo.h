@@ -6,7 +6,7 @@
 /*   By: janeway <janeway@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/06/26 12:01:51 by janeway       #+#    #+#                 */
-/*   Updated: 2022/07/19 14:01:35 by janeway       ########   odam.nl         */
+/*   Updated: 2022/07/18 15:06:51 by cpopa         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,24 +20,12 @@
 # include <pthread.h>
 # include <stddef.h>
 # include <sys/time.h>
-# include <sys/types.h>
-# include <sys/wait.h>
-# include <signal.h>
-# include <fcntl.h>
-# include <sys/stat.h>
-# include <semaphore.h>
 
 # define OK 0
-# define ERROR 1
+# define ERROR 1  // replace with -1? 
 
 # define ACTIVE 1
 # define INNACTIVE 0
-
-# define DEAD 5
-# define FULL 7
-
-# define FORKS "FORKS"
-# define WRITE "WRITE"
 
 # define INPUT "input required: nr philo > 0, time to die > -1,\
 time to eat > -1, time to sleep > -1, nr times to \
@@ -67,6 +55,14 @@ enum e_msg
 	msg_die,
 };
 
+enum e_err
+{
+	err_philos,
+	err_forks,
+	err_neighbour,
+	err_threads
+};
+
 /*
 ** input units of time are in miliseconds 
 ** usleep works in mocroseconds
@@ -76,12 +72,12 @@ enum e_msg
 typedef struct s_philo
 {
 	int				id;
+	int				left_fork;
+	int				right_fork;
 	int				last_eaten;
 	int				times_eaten;
-	sem_t			*s_dead;
-	char			*name_dead;
-	sem_t			*s_last_meal;
-	char			*name_last_meal;
+	pthread_mutex_t	last_meal;
+	int				status;
 	struct s_data	*data;
 }				t_philo;
 
@@ -93,9 +89,12 @@ typedef struct s_data
 	int				t_sleep;
 	int				nr_rounds;
 	struct timeval	start_time;
-	pid_t			*process_id;
-	sem_t			*s_forks;
-	sem_t			*s_write;
+	pthread_t		*pthread_id;
+	pthread_mutex_t	*forks_lock;
+	pthread_mutex_t	write_lock;
+	int				dead_philo;
+	pthread_t		surveilance;
+	pthread_mutex_t	dead_monitor;
 	t_philo			*philos;
 }				t_data;
 
@@ -104,15 +103,9 @@ typedef struct s_data
 ** ---------------------------------
 */
 
-int				initialize_data(t_data *data);
-sem_t			*open_semaphore(sem_t **address, char *name, int size);
-
-/*
-** Create Processes
-** ---------------------------------
-*/
-
-int				create_processes(t_data *data);
+int				init_data(t_data *data);
+int				create_pthreads(t_data *data);
+int				join_threads(t_data *data);
 
 /*
 ** Routine
@@ -132,7 +125,6 @@ void			philo_think(t_philo *philo);
 int				ft_atoi(const char *nptr);
 char			*ft_itoa(int n);
 size_t			ft_strlen(const char *str);
-char			*ft_strdup(const char *s);
 int				ft_strncmp(const char *s1, const char *s2, size_t n);
 
 /*
@@ -140,26 +132,34 @@ int				ft_strncmp(const char *s1, const char *s2, size_t n);
 ** ---------------------------------
 */
 
+void			write_message(t_philo *philo, enum e_msg message);
+
+/*
+** Time
+** ---------------------------------
+*/
+
 unsigned long	get_time(void);
 unsigned long	get_elapsed_time(t_philo *philo);
-void			better_sleep(int sleep_time);
-void			write_message(t_philo *philo, enum e_msg message);
+// void			better_sleep(int sleep_time);
+void			better_sleep(t_data *data, int sleep_time);
 
 /*
 ** Surveillance
 ** ---------------------------------
 */
 
-int				surveillance(t_data *data);
-int				kill_processes(t_data *data);
+int				surveilance(t_data *data);
+int				still_alive(t_data *data);
+void			*dead_philo(void *arg);
 
 /*
 ** Free
 ** ---------------------------------
 */
 
-void			free_memory(t_data *data);
-void			close_semaphore(sem_t *sem, char *name);
+void			destroy_mutexes(t_data *data);
+void			free_stuff(t_data *data);
 void			clean_up(t_data *data);
 
 /*
@@ -168,9 +168,10 @@ void			clean_up(t_data *data);
 */
 
 int				error(char *str);
-int				error_memory(t_data *data, char *str);
-int				error_semaphore(char *str, t_data *data);
-int				error_exit(char *str);
-int				general_error(t_data *data, char *str);
+int				error_sleep(t_data *data);
+int				error_forks(t_data *data, char *str);
+int				error_init_mutexes(t_data *data, char *str);
+int				error_malloc_threads(t_data *data, char *str);
+int				error_create_threads(t_data *data, int count);
 
 #endif

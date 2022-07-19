@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   philo_bonus.c                                      :+:    :+:            */
+/*   philo.c                                            :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: cpopa <cpopa@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/05/30 11:25:36 by cpopa         #+#    #+#                 */
-/*   Updated: 2022/07/19 14:06:13 by janeway       ########   odam.nl         */
+/*   Updated: 2022/07/18 17:01:28 by cpopa         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/philo.h"
+#include "philo.h"
 
-static int	check_digit(char *input, int *str)
+static int	check_input(char *input, int *str)
 {
 	int		nr;
 	size_t	lenght;
@@ -31,22 +31,22 @@ static int	check_digit(char *input, int *str)
 	return (0);
 }
 
-static int	check_input(int argc, char **argv, t_data *data)
+static int	get_input(int argc, char **argv, t_data *data)
 {
 	if (argc < 5 || argc > 6)
 		return (error("wrong number of arguments\n"));
-	if (check_digit(argv[1], &data->nr_philo) != 0)
+	if (check_input(argv[1], &data->nr_philo) != 0)
 		return (error("odd party of philosophers there...\n"));
-	if (check_digit(argv[2], &data->t_die) != 0)
+	if (check_input(argv[2], &data->t_die) != 0)
 		return (error("might want to check that time to die...\n"));
-	if (check_digit(argv[3], &data->t_eat) != 0)
+	if (check_input(argv[3], &data->t_eat) != 0)
 		return (error("must eat brains! lunch time is off!\n"));
-	if (check_digit(argv[4], &data->t_sleep) != 0)
+	if (check_input(argv[4], &data->t_sleep) != 0)
 		return (error("put your glasses on and let me sleep!\n"));
 	data->nr_rounds = -1;
 	if (argc == 6)
 	{
-		if (check_digit(argv[5], &data->nr_rounds) != 0)
+		if (check_input(argv[5], &data->nr_rounds) != 0)
 			return (error("don't be skimpy! let us eat more times!\n"));
 	}
 	if (data->nr_philo < 1 || data->t_die < 0 || data->t_eat < 0
@@ -64,14 +64,15 @@ int	main(int argc, char **argv)
 {
 	t_data	data;
 
-	atexit(checkleaks); // remove?
-	if (check_input(argc, argv, &data) == ERROR)
+	atexit(checkleaks);
+
+	if (get_input(argc, argv, &data) == ERROR)
 		return (ERROR);
-	if (initialize_data(&data) == ERROR)
+	if (init_data(&data) == ERROR)
 		return (ERROR);
-	create_processes(&data);
-	if (surveillance(&data) == ERROR)
+	if (create_pthreads(&data) == ERROR)
 		return (ERROR);
+	join_threads(&data);
 	clean_up(&data);
 	return (OK);
 }

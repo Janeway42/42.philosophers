@@ -1,33 +1,40 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   write.c                                            :+:    :+:            */
+/*   routine_utils.c                                    :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: cpopa <cpopa@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/05/30 11:25:36 by cpopa         #+#    #+#                 */
-/*   Updated: 2022/07/19 14:02:43 by janeway       ########   odam.nl         */
+/*   Updated: 2022/07/18 15:58:48 by cpopa         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/philo.h"
 
-void	write_message(t_philo *philo, enum e_msg message)
+int	philo_eat(t_philo *philo)
 {
-	const char		*prompt[] = {"has taken a fork",
-		"is eating",
-		"is sleeping",
-		"is thinking",
-		"died"};
+	sem_wait(philo->s_last_meal);
+	philo->last_eaten = (int)get_elapsed_time(philo);
+	sem_post(philo->s_last_meal);
+	sem_wait(philo->s_dead);
+	write_message(philo, msg_eat);
+	better_sleep(philo->data->t_eat);
+	philo->times_eaten += 1;
+	sem_post(philo->s_dead);
+	sem_post(philo->data->s_forks);
+	sem_post(philo->data->s_forks);
+	return (OK);
+}
 
-	sem_wait(philo->data->s_write);
-	if (message == msg_die)
-		printf("\033[0;31m%lu %d %s\033[0m\n",
-			get_elapsed_time(philo), (philo->id + 1), prompt[message]);
-	else
-	{
-		printf("%lu %d %s\n", get_elapsed_time(philo),
-			(philo->id + 1), prompt[message]);
-		sem_post(philo->data->s_write);
-	}
+void	philo_sleep(t_philo *philo)
+{
+	write_message(philo, msg_sleep);
+	better_sleep(philo->data->t_sleep);
+}
+
+void	philo_think(t_philo *philo)
+{
+	write_message(philo, msg_think);
+	usleep(100);
 }

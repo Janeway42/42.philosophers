@@ -6,13 +6,13 @@
 /*   By: cpopa <cpopa@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/05/30 11:25:36 by cpopa         #+#    #+#                 */
-/*   Updated: 2022/07/08 15:24:27 by cpopa         ########   odam.nl         */
+/*   Updated: 2022/07/19 13:50:29 by janeway       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/philo.h"
 
-void	free_stuff(t_data *data)
+void	free_memory(t_data *data)
 {
 	if (data->philos)
 		free(data->philos);
@@ -30,5 +30,5 @@ void	clean_up(t_data *data)
 {
 	close_semaphore(data->s_forks, "FORKS");
 	close_semaphore(data->s_write, "WRITE");
-	free_stuff(data);
+	free_memory(data);
 }

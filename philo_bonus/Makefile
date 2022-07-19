@@ -4,7 +4,7 @@ LFLAGS	= -pthread
 UNAME = $(shell uname)
 
 S_SRC	=	philo_bonus.c\
-			init_data.c\
+			initialize_data.c\
 			create_processes.c\
 			routine.c\
 			routine_utils.c\

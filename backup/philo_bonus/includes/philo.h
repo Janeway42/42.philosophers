@@ -6,7 +6,7 @@
 /*   By: janeway <janeway@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/06/26 12:01:51 by janeway       #+#    #+#                 */
-/*   Updated: 2022/07/19 14:01:35 by janeway       ########   odam.nl         */
+/*   Updated: 2022/07/13 12:22:38 by cpopa         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,14 @@ enum e_msg
 	msg_die,
 };
 
+enum e_err
+{
+	err_philos,
+	err_forks,
+	err_neighbour,
+	err_threads
+};
+
 /*
 ** input units of time are in miliseconds 
 ** usleep works in mocroseconds
@@ -82,6 +90,7 @@ typedef struct s_philo
 	char			*name_dead;
 	sem_t			*s_last_meal;
 	char			*name_last_meal;
+	int				status;
 	struct s_data	*data;
 }				t_philo;
 
@@ -104,7 +113,8 @@ typedef struct s_data
 ** ---------------------------------
 */
 
-int				initialize_data(t_data *data);
+int				init_data(t_data *data);
+int				init_semaphores(t_data *data);
 sem_t			*open_semaphore(sem_t **address, char *name, int size);
 
 /*
@@ -113,6 +123,7 @@ sem_t			*open_semaphore(sem_t **address, char *name, int size);
 */
 
 int				create_processes(t_data *data);
+t_philo			*init_data_process(t_data *data, int i);
 
 /*
 ** Routine
@@ -125,7 +136,7 @@ void			philo_sleep(t_philo *philo);
 void			philo_think(t_philo *philo);
 
 /*
-** Basics
+** Utils
 ** ---------------------------------
 */
 
@@ -136,13 +147,19 @@ char			*ft_strdup(const char *s);
 int				ft_strncmp(const char *s1, const char *s2, size_t n);
 
 /*
-** Utils
+** Time
 ** ---------------------------------
 */
 
 unsigned long	get_time(void);
 unsigned long	get_elapsed_time(t_philo *philo);
 void			better_sleep(int sleep_time);
+
+/*
+** Write
+** ---------------------------------
+*/
+
 void			write_message(t_philo *philo, enum e_msg message);
 
 /*
@@ -158,7 +175,7 @@ int				kill_processes(t_data *data);
 ** ---------------------------------
 */
 
-void			free_memory(t_data *data);
+void			free_stuff(t_data *data);
 void			close_semaphore(sem_t *sem, char *name);
 void			clean_up(t_data *data);
 
@@ -168,7 +185,7 @@ void			clean_up(t_data *data);
 */
 
 int				error(char *str);
-int				error_memory(t_data *data, char *str);
+int				error_free(char *str, t_data *data);
 int				error_semaphore(char *str, t_data *data);
 int				error_exit(char *str);
 int				general_error(t_data *data, char *str);

@@ -6,7 +6,7 @@
 /*   By: cpopa <cpopa@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/05/30 11:25:36 by cpopa         #+#    #+#                 */
-/*   Updated: 2022/07/19 14:06:03 by janeway       ########   odam.nl         */
+/*   Updated: 2022/07/18 16:16:40 by cpopa         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ static int	overeaten(t_philo *philo)
 	return (eat_time);
 }
 
-static t_philo	*initialize_data_process(t_data *data, int i)
+t_philo	*init_data_process(t_data *data, int i)
 {
 	t_philo	*philo;
 
@@ -45,11 +45,12 @@ static t_philo	*initialize_data_process(t_data *data, int i)
 	philo->s_last_meal = open_semaphore(&philo->s_last_meal,
 			philo->name_last_meal, 1);
 	philo->times_eaten = 0;
+	philo->status = ACTIVE;
 	philo->last_eaten = (int)get_elapsed_time(philo);
 	return (philo);
 }
 
-static void	clean_up_process(t_philo *philo, pthread_t *thread) // it never reaches here
+static void	clean_up_process(t_philo *philo, pthread_t *thread)
 {
 	close_semaphore(philo->s_last_meal, philo->name_last_meal);
 	close_semaphore(philo->s_dead, philo->name_dead);
@@ -58,13 +59,13 @@ static void	clean_up_process(t_philo *philo, pthread_t *thread) // it never reac
 	free(thread);
 }
 
-static int	execute_process(t_data *data, int i)
+int	execute_process(t_data *data, int i)
 {
 	pthread_t	*thread;
 	t_philo		*philo;
 
 	free(data->philos);
-	philo = initialize_data_process(data, i);
+	philo = init_data_process(data, i);
 	thread = malloc(sizeof(pthread_t));
 	if (!thread)
 		error_exit("malloc fail: thread\n");
@@ -75,7 +76,7 @@ static int	execute_process(t_data *data, int i)
 	while (1)
 	{
 		sem_wait(philo->s_dead);
-		if (overeaten(philo) == 1)
+		if (philo->status == ACTIVE && overeaten(philo) == 1)
 		{
 			write_message(philo, msg_die);
 			exit(DEAD);

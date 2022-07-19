@@ -6,7 +6,7 @@
 /*   By: janeway <janeway@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/06/26 12:01:51 by janeway       #+#    #+#                 */
-/*   Updated: 2022/07/18 15:06:51 by cpopa         ########   odam.nl         */
+/*   Updated: 2022/07/19 13:35:46 by janeway       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 # include <sys/time.h>
 
 # define OK 0
-# define ERROR 1  // replace with -1? 
+# define ERROR 1
 
 # define ACTIVE 1
 # define INNACTIVE 0
@@ -55,14 +55,6 @@ enum e_msg
 	msg_die,
 };
 
-enum e_err
-{
-	err_philos,
-	err_forks,
-	err_neighbour,
-	err_threads
-};
-
 /*
 ** input units of time are in miliseconds 
 ** usleep works in mocroseconds
@@ -76,7 +68,7 @@ typedef struct s_philo
 	int				right_fork;
 	int				last_eaten;
 	int				times_eaten;
-	pthread_mutex_t	last_meal;
+	pthread_mutex_t	meal_lock;
 	int				status;
 	struct s_data	*data;
 }				t_philo;
@@ -94,16 +86,16 @@ typedef struct s_data
 	pthread_mutex_t	write_lock;
 	int				dead_philo;
 	pthread_t		surveilance;
-	pthread_mutex_t	dead_monitor;
+	pthread_mutex_t	dead_lock;
 	t_philo			*philos;
 }				t_data;
 
 /*
-** Init
+** Initialize
 ** ---------------------------------
 */
 
-int				init_data(t_data *data);
+int				initialize_data(t_data *data);
 int				create_pthreads(t_data *data);
 int				join_threads(t_data *data);
 
@@ -133,12 +125,6 @@ int				ft_strncmp(const char *s1, const char *s2, size_t n);
 */
 
 void			write_message(t_philo *philo, enum e_msg message);
-
-/*
-** Time
-** ---------------------------------
-*/
-
 unsigned long	get_time(void);
 unsigned long	get_elapsed_time(t_philo *philo);
 // void			better_sleep(int sleep_time);
@@ -159,7 +145,7 @@ void			*dead_philo(void *arg);
 */
 
 void			destroy_mutexes(t_data *data);
-void			free_stuff(t_data *data);
+void			free_memory(t_data *data);
 void			clean_up(t_data *data);
 
 /*
@@ -168,10 +154,8 @@ void			clean_up(t_data *data);
 */
 
 int				error(char *str);
-int				error_sleep(t_data *data);
-int				error_forks(t_data *data, char *str);
-int				error_init_mutexes(t_data *data, char *str);
-int				error_malloc_threads(t_data *data, char *str);
-int				error_create_threads(t_data *data, int count);
+int				error_memory(t_data *data, char *str);
+int				error_mutex(t_data *data, char *str);
+int				error_threads(t_data *data, int count, char *str);
 
 #endif

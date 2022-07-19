@@ -4,8 +4,8 @@ LFLAGS	= -pthread
 UNAME = $(shell uname)
 
 S_SRC	=	philo.c\
-			initialize_data.c\
-			create_threads.c\
+			init_data.c\
+			threads.c\
 			routine.c\
 			routine_utils.c\
 			surveilance.c

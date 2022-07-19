@@ -6,7 +6,7 @@
 /*   By: cpopa <cpopa@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/05/30 11:25:36 by cpopa         #+#    #+#                 */
-/*   Updated: 2022/07/19 13:16:18 by janeway       ########   odam.nl         */
+/*   Updated: 2022/07/18 17:02:41 by cpopa         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 int	philo_eat(t_philo *philo)
 {
-	pthread_mutex_lock(&philo->meal_lock);
+	pthread_mutex_lock(&philo->last_meal);
 	philo->last_eaten = (int)get_elapsed_time(philo);
-	pthread_mutex_unlock(&philo->meal_lock);
+	pthread_mutex_unlock(&philo->last_meal);
 	if (still_alive(philo->data) == 0)
 	{
 		write_message(philo, msg_eat);
