@@ -6,7 +6,7 @@
 /*   By: cpopa <cpopa@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/05/30 11:25:36 by cpopa         #+#    #+#                 */
-/*   Updated: 2022/07/19 13:36:54 by janeway       ########   odam.nl         */
+/*   Updated: 2022/07/20 13:29:27 by cpopa         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,18 +55,19 @@ static int	check_input(int argc, char **argv, t_data *data)
 	return (OK);
 }
 
-void	checkleaks(void)
-{
-	system("leaks -quiet philo");
-}
+// void	checkleaks(void)
+// {
+// 	system("leaks -quiet philo");
+// }
 
 int	main(int argc, char **argv)
 {
 	t_data	data;
 
-	atexit(checkleaks); // remove?
+	// atexit(checkleaks); // remove?
 	if (check_input(argc, argv, &data) == ERROR)
 		return (ERROR);
+	printf("time to die: %d\n", data.t_die);
 	if (initialize_data(&data) == ERROR)
 		return (ERROR);
 	if (create_pthreads(&data) == ERROR)

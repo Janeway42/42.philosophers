@@ -6,7 +6,7 @@
 /*   By: janeway <janeway@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/06/26 12:01:51 by janeway       #+#    #+#                 */
-/*   Updated: 2022/07/19 13:35:46 by janeway       ########   odam.nl         */
+/*   Updated: 2022/07/20 13:32:44 by cpopa         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,7 @@ typedef struct s_philo
 	int				last_eaten;
 	int				times_eaten;
 	pthread_mutex_t	meal_lock;
+	pthread_mutex_t	local_dead_lock;
 	int				status;
 	struct s_data	*data;
 }				t_philo;

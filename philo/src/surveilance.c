@@ -6,11 +6,11 @@
 /*   By: cpopa <cpopa@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/05/30 11:25:36 by cpopa         #+#    #+#                 */
-/*   Updated: 2022/07/19 13:18:00 by janeway       ########   odam.nl         */
+/*   Updated: 2022/07/20 13:35:27 by cpopa         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "../includes/philo.h"
 
 int	still_alive(t_data *data)
 {
@@ -26,15 +26,17 @@ int	still_alive(t_data *data)
 
 static int	check_overeaten(t_philo *philo)
 {
-	int	elapsed_time;
+	// int	elapsed_time;
 	int	eat_time;
 
 	eat_time = 0;
-	elapsed_time = (int)get_elapsed_time(philo);
+	// elapsed_time = (int)get_elapsed_time(philo);
+	pthread_mutex_lock(&philo->local_dead_lock);
 	pthread_mutex_lock(&philo->meal_lock);
-	if ((elapsed_time - philo->last_eaten) > philo->data->t_die)
+	if (((int)get_elapsed_time(philo) - philo->last_eaten) > philo->data->t_die)
 		eat_time = 1;
 	pthread_mutex_unlock(&philo->meal_lock);
+	pthread_mutex_unlock(&philo->local_dead_lock);
 	return (eat_time);
 }
 
@@ -63,7 +65,7 @@ void	*dead_philo(void *arg)
 			if (data->philos[i].status == ACTIVE
 				&& check_overeaten(&data->philos[i]) == 1)
 				return (overeaten(data, i));
-			else if (data->philos[i].status == INNACTIVE)
+			if (data->philos[i].status == INNACTIVE)
 			{
 				innactive++;
 				if (innactive == data->nr_philo)
@@ -71,7 +73,7 @@ void	*dead_philo(void *arg)
 			}
 			i++;
 		}
-		usleep(2000);
+		usleep(1000);
 	}
 	return (NULL);
 }
