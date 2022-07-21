@@ -1,6 +1,7 @@
 NAME = philo_bonus
-CFLAGS	= -Wall -Werror -Wextra -g #-fsanitize=address   #-fsanitize=thread #
+CFLAGS	= -Wall -Werror -Wextra -g #-fsanitize=address #   -fsanitize=thread
 LFLAGS	= -pthread
+
 UNAME = $(shell uname)
 
 S_SRC	=	philo_bonus.c\
