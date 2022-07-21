@@ -6,7 +6,7 @@
 /*   By: cpopa <cpopa@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/05/30 11:25:36 by cpopa         #+#    #+#                 */
-/*   Updated: 2022/07/20 13:35:27 by cpopa         ########   odam.nl         */
+/*   Updated: 2022/07/21 15:37:31 by cpopa         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,14 +26,13 @@ int	still_alive(t_data *data)
 
 static int	check_overeaten(t_philo *philo)
 {
-	// int	elapsed_time;
 	int	eat_time;
 
 	eat_time = 0;
-	// elapsed_time = (int)get_elapsed_time(philo);
 	pthread_mutex_lock(&philo->local_dead_lock);
 	pthread_mutex_lock(&philo->meal_lock);
-	if (((int)get_elapsed_time(philo) - philo->last_eaten) > philo->data->t_die)
+	if (((int)get_elapsed_time(philo) - philo->last_eaten)
+		> philo->data->t_die)
 		eat_time = 1;
 	pthread_mutex_unlock(&philo->meal_lock);
 	pthread_mutex_unlock(&philo->local_dead_lock);
@@ -49,6 +48,18 @@ void	*overeaten(t_data *data, int i)
 	return (NULL);
 }
 
+int	check_status(t_philo *philo)
+{
+	int	status;
+
+	status = 0;
+	pthread_mutex_lock(&philo->status_lock);
+	if (philo->status == INNACTIVE)
+		status = 1;
+	pthread_mutex_unlock(&philo->status_lock);
+	return (status);
+}
+
 void	*dead_philo(void *arg)
 {
 	t_data	*data;
@@ -62,18 +73,17 @@ void	*dead_philo(void *arg)
 		i = 0;
 		while (i < data->nr_philo && innactive != data->nr_philo)
 		{
-			if (data->philos[i].status == ACTIVE
-				&& check_overeaten(&data->philos[i]) == 1)
-				return (overeaten(data, i));
-			if (data->philos[i].status == INNACTIVE)
+			if (check_status(&data->philos[i]) == 1)
 			{
 				innactive++;
 				if (innactive == data->nr_philo)
 					return (NULL);
 			}
+			else if (check_overeaten(&data->philos[i]) == 1)
+				return (overeaten(data, i));
 			i++;
 		}
-		usleep(1000);
+		usleep(1500);
 	}
 	return (NULL);
 }

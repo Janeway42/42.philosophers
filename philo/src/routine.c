@@ -6,11 +6,11 @@
 /*   By: cpopa <cpopa@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/05/30 11:25:36 by cpopa         #+#    #+#                 */
-/*   Updated: 2022/07/18 17:23:55 by cpopa         ########   odam.nl         */
+/*   Updated: 2022/07/21 14:17:00 by cpopa         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "../includes/philo.h"
 
 void	take_forks(t_philo *philo)
 {
@@ -51,6 +51,8 @@ void	*routine(void *arg)
 		philo_sleep(philo);
 		philo_think(philo);
 	}
+	pthread_mutex_lock(&philo->status_lock);
 	philo->status = INNACTIVE;
+	pthread_mutex_unlock(&philo->status_lock);
 	return (NULL);
 }

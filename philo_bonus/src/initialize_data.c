@@ -6,7 +6,7 @@
 /*   By: cpopa <cpopa@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/05/30 11:25:36 by cpopa         #+#    #+#                 */
-/*   Updated: 2022/07/19 13:47:34 by janeway       ########   odam.nl         */
+/*   Updated: 2022/07/21 16:55:22 by cpopa         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ static int	initialize_semaphores(t_data *data)
 	data->s_forks = open_semaphore(&data->s_forks, "FORKS", data->nr_philo);
 	if (data->s_forks == SEM_FAILED)
 		return (error_semaphore("sem failed: s_forks\n", data));
+	// dprintf(2, "FORKS = %p\n", data->s_forks);
 	data->s_write = open_semaphore(&data->s_write, "WRITE", 1);
 	if (data->s_write == SEM_FAILED)
 		return (error_semaphore("sem failed: s_write\n", data));

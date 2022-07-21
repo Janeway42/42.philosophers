@@ -6,7 +6,7 @@
 /*   By: janeway <janeway@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/06/26 12:01:51 by janeway       #+#    #+#                 */
-/*   Updated: 2022/07/19 14:01:35 by janeway       ########   odam.nl         */
+/*   Updated: 2022/07/21 16:21:44 by cpopa         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,7 @@ typedef struct s_philo
 	char			*name_dead;
 	sem_t			*s_last_meal;
 	char			*name_last_meal;
+	pthread_t		*thread;
 	struct s_data	*data;
 }				t_philo;
 
@@ -159,6 +160,7 @@ int				kill_processes(t_data *data);
 */
 
 void			free_memory(t_data *data);
+void	clean_up_process(t_philo *philo);
 void			close_semaphore(sem_t *sem, char *name);
 void			clean_up(t_data *data);
 

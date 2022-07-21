@@ -6,7 +6,7 @@
 /*   By: cpopa <cpopa@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/05/30 11:25:36 by cpopa         #+#    #+#                 */
-/*   Updated: 2022/07/19 14:06:03 by janeway       ########   odam.nl         */
+/*   Updated: 2022/07/21 17:13:58 by cpopa         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,10 +36,13 @@ static t_philo	*initialize_data_process(t_data *data, int i)
 	philo->data = data;
 	philo->id = i;
 	philo->name_dead = ft_itoa(philo->id + 1000);
+	// dprintf(2, "name_dead = %p\n", philo->name_dead);
 	if (!philo->name_dead)
 		error_exit("strdup fail: name_dead\n");
 	philo->s_dead = open_semaphore(&philo->s_dead, philo->name_dead, 1);
+	// dprintf(2, "s_dead = %p\n", philo->s_dead);
 	philo->name_last_meal = ft_itoa(philo->id);
+	// dprintf(2, "name_dead = %p\n", philo->name_last_meal);
 	if (!philo->name_last_meal)
 		error_exit("strdup fail: name_last_meal\n");
 	philo->s_last_meal = open_semaphore(&philo->s_last_meal,
@@ -49,28 +52,31 @@ static t_philo	*initialize_data_process(t_data *data, int i)
 	return (philo);
 }
 
-static void	clean_up_process(t_philo *philo, pthread_t *thread) // it never reaches here
+void	clean_up_process(t_philo *philo) // it never reaches here
 {
+	// dprintf(2, "pid = %d, sems: %p, %p\n",getpid(), philo->s_last_meal, philo->s_dead);
 	close_semaphore(philo->s_last_meal, philo->name_last_meal);
 	close_semaphore(philo->s_dead, philo->name_dead);
 	free(philo->name_last_meal);
 	free(philo->name_dead);
-	free(thread);
+	free(philo->thread);
+	free(philo);
 }
 
 static int	execute_process(t_data *data, int i)
 {
-	pthread_t	*thread;
 	t_philo		*philo;
 
 	free(data->philos);
+	// dprintf(2, "pid = %d, data = %p\n", getpid(), data);
 	philo = initialize_data_process(data, i);
-	thread = malloc(sizeof(pthread_t));
-	if (!thread)
+	philo->thread = malloc(sizeof(pthread_t));
+	// dprintf(2, "thread: %p\n", philo->thread);
+	if (!philo->thread)
 		error_exit("malloc fail: thread\n");
-	if (pthread_create(thread, NULL, routine, philo) != 0)
+	if (pthread_create(philo->thread, NULL, routine, philo) != 0)
 		error_exit("pthread_create fail\n");
-	if (pthread_detach(*thread) != 0)
+	if (pthread_detach(*(philo->thread)) != 0)
 		error_exit("pthread_detach fail\n");
 	while (1)
 	{
@@ -78,13 +84,14 @@ static int	execute_process(t_data *data, int i)
 		if (overeaten(philo) == 1)
 		{
 			write_message(philo, msg_die);
+			clean_up_process(philo);
 			exit(DEAD);
 		}
 		sem_post(philo->s_dead);
-		usleep(1000);
+		usleep(5000);
 	}
-	clean_up_process(philo, thread);
-	return (OK);
+	// clean_up_process(philo);
+	// return (OK);
 }
 
 int	create_processes(t_data *data)
@@ -98,7 +105,7 @@ int	create_processes(t_data *data)
 		if (data->process_id[i] == -1)
 			error_exit("fork failed \n");
 		if (data->process_id[i] == 0)
-			return (execute_process(data, i));
+			exit(execute_process(data, i));
 		i++;
 	}
 	return (OK);

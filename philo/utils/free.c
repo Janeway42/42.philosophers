@@ -6,11 +6,11 @@
 /*   By: cpopa <cpopa@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/05/30 11:25:36 by cpopa         #+#    #+#                 */
-/*   Updated: 2022/07/19 13:17:44 by janeway       ########   odam.nl         */
+/*   Updated: 2022/07/21 14:11:48 by cpopa         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "../includes/philo.h"
 
 void	destroy_mutexes(t_data *data)
 {
@@ -20,7 +20,9 @@ void	destroy_mutexes(t_data *data)
 	while (i < data->nr_philo)
 	{
 		pthread_mutex_destroy(&data->forks_lock[i]);
+		pthread_mutex_destroy(&data->philos[i].status_lock);
 		pthread_mutex_destroy(&data->philos[i].meal_lock);
+		pthread_mutex_destroy(&data->philos[i].local_dead_lock);
 		i++;
 	}
 	pthread_mutex_destroy(&data->dead_lock);

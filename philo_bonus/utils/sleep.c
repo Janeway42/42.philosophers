@@ -6,7 +6,7 @@
 /*   By: cpopa <cpopa@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/05/30 11:25:36 by cpopa         #+#    #+#                 */
-/*   Updated: 2022/07/18 16:06:37 by cpopa         ########   odam.nl         */
+/*   Updated: 2022/07/21 17:13:32 by cpopa         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,14 @@ void	better_sleep(int sleep_time)
 
 	start = get_time();
 	ms_time = (unsigned long)sleep_time;
-	while ((get_time() - start) < ms_time)
-		usleep(100);
+	while (1)
+	{
+		if ((get_time() - start) > ms_time)
+			break;
+		usleep(500);
+	}
+	// while ((get_time() - start) < ms_time)
+	// 	usleep(500);
 }
 
 unsigned long	get_elapsed_time(t_philo *philo)
