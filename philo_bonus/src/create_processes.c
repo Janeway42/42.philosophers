@@ -6,7 +6,7 @@
 /*   By: cpopa <cpopa@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/05/30 11:25:36 by cpopa         #+#    #+#                 */
-/*   Updated: 2022/07/22 16:34:43 by cpopa         ########   odam.nl         */
+/*   Updated: 2022/07/22 23:25:23 by janeway       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,27 +77,27 @@ void	clean_up_process(t_philo *philo) // it never reaches here
 	free(philo->name_last_meal);
 	free(philo->name_dead);
 	free(philo->name_status);
-	// free(philo->thread);
+	free(philo->thread);
 	free(philo);
 }
 
 static int	execute_process(t_data *data, int i)
 {
 	t_philo		*philo;
-	pthread_t	thread;
+	// pthread_t	thread;
 
 	free(data->philos);
 	free(data->process_id);
-	thread = NULL;
+	// thread = NULL;
 
-	// dprintf(2, "pid = %d, data = %p\n", getpid(), data);
+	dprintf(2, "pid thread[%d] = %d, data = %p\n", i, getpid(), data);
 	philo = initialize_data_process(data, i);
 
-	// philo->thread = malloc(sizeof(pthread_t));
+	philo->thread = malloc(sizeof(pthread_t));
 	// dprintf(2, "thread: %p\n", philo->thread);
-	// if (!philo->thread)
-		// error_exit"malloc fail: thread\n");
-	if (pthread_create(&thread, NULL, routine, philo) != 0)
+	if (!philo->thread)
+		error_exit("malloc fail: thread\n");
+	if (pthread_create(philo->thread, NULL, routine, philo) != 0)
 		error_exit("pthread_create fail\n");
 	// if (pthread_detach(*(philo->thread)) != 0)
 	// 	error_exit("pthread_detach fail\n");
@@ -116,14 +116,14 @@ static int	execute_process(t_data *data, int i)
 		sem_wait(philo->s_status);
 		if (philo->status == INNACTIVE)
 		{
-			pthread_join(thread, NULL);
+			pthread_join(*philo->thread, NULL);
 			exit (FULL);
 		}
 		sem_post(philo->s_status);
 
 		usleep(5000);
 	}
-	pthread_join(thread, NULL);
+	pthread_join(*philo->thread, NULL);
 	// clean_up_process(philo);
 	return (OK);
 	
