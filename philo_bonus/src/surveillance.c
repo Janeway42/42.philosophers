@@ -6,7 +6,7 @@
 /*   By: cpopa <cpopa@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/05/30 11:25:36 by cpopa         #+#    #+#                 */
-/*   Updated: 2022/07/21 17:14:15 by cpopa         ########   odam.nl         */
+/*   Updated: 2022/07/22 16:35:33 by cpopa         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ int	surveillance(t_data *data)
 			if (WIFEXITED(status) && WEXITSTATUS(status) == ERROR)
 				return (general_error(data, "error exit\n"));
 			i++;
-			usleep(5000);
+			usleep(20000);
 		}
 	}
 	return (OK);

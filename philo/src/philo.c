@@ -6,7 +6,7 @@
 /*   By: cpopa <cpopa@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/05/30 11:25:36 by cpopa         #+#    #+#                 */
-/*   Updated: 2022/07/21 14:07:53 by cpopa         ########   odam.nl         */
+/*   Updated: 2022/07/22 13:48:15 by cpopa         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,6 @@ int	main(int argc, char **argv)
 
 	if (check_input(argc, argv, &data) == ERROR)
 		return (ERROR);
-	printf("time to die: %d\n", data.t_die);
 	if (initialize_data(&data) == ERROR)
 		return (ERROR);
 	if (create_pthreads(&data) == ERROR)

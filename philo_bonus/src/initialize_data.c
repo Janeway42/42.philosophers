@@ -6,7 +6,7 @@
 /*   By: cpopa <cpopa@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/05/30 11:25:36 by cpopa         #+#    #+#                 */
-/*   Updated: 2022/07/21 16:55:22 by cpopa         ########   odam.nl         */
+/*   Updated: 2022/07/22 15:11:52 by cpopa         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,10 +35,18 @@ static int	initialize_semaphores(t_data *data)
 
 static int	allocate_memory(t_data *data)
 {
+	int i = 0;
+
 	data->philos = malloc(sizeof(t_philo) * data->nr_philo);
 	data->process_id = malloc(sizeof(pid_t) * data->nr_philo);
 	if (!data->philos || !data->process_id)
 		return (error_memory(data, "malloc fail: process_id\n"));
+	while (i < data-> nr_philo)
+	{
+		dprintf(2, "processes = %p\n", &data->process_id[i]);
+		i++;
+
+	}
 	return (OK);
 }
 

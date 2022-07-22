@@ -6,7 +6,7 @@
 /*   By: cpopa <cpopa@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/05/30 11:25:36 by cpopa         #+#    #+#                 */
-/*   Updated: 2022/07/21 15:37:31 by cpopa         ########   odam.nl         */
+/*   Updated: 2022/07/22 16:46:48 by cpopa         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,17 +73,18 @@ void	*dead_philo(void *arg)
 		i = 0;
 		while (i < data->nr_philo && innactive != data->nr_philo)
 		{
-			if (check_status(&data->philos[i]) == 1)
+			if (check_status(&data->philos[i]) == 1
+				&& check_overeaten(&data->philos[i]) == 0)
 			{
-				innactive++;
-				if (innactive == data->nr_philo)
+				if (++innactive == data->nr_philo)
 					return (NULL);
 			}
-			else if (check_overeaten(&data->philos[i]) == 1)
+			if (check_status(&data->philos[i]) == 0
+				&& check_overeaten(&data->philos[i]) == 1)
 				return (overeaten(data, i));
 			i++;
 		}
-		usleep(1500);
+		usleep(7000);
 	}
 	return (NULL);
 }
