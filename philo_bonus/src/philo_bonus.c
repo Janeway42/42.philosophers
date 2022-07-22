@@ -6,7 +6,7 @@
 /*   By: cpopa <cpopa@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/05/30 11:25:36 by cpopa         #+#    #+#                 */
-/*   Updated: 2022/07/21 19:39:51 by janeway       ########   odam.nl         */
+/*   Updated: 2022/07/22 13:22:12 by cpopa         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ int	main(int argc, char **argv)
 
 	// dprintf(2, "Main process has id %d\n", getpid());
 
-	// atexit(checkleaks); // remove?
+	atexit(checkleaks); // remove?
 	// system("leaks philo_bonus");
 	if (check_input(argc, argv, &data) == ERROR)
 		return (ERROR);

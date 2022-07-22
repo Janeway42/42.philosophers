@@ -6,7 +6,7 @@
 /*   By: cpopa <cpopa@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/05/30 11:25:36 by cpopa         #+#    #+#                 */
-/*   Updated: 2022/07/21 21:01:42 by janeway       ########   odam.nl         */
+/*   Updated: 2022/07/22 13:21:03 by cpopa         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,7 @@ void	clean_up_process(t_philo *philo) // it never reaches here
 	close_semaphore(philo->s_dead, philo->name_dead);
 	free(philo->name_last_meal);
 	free(philo->name_dead);
+	free(philo->name_status);
 	free(philo->thread);
 	free(philo);
 }
@@ -85,11 +86,12 @@ static int	execute_process(t_data *data, int i)
 	t_philo		*philo;
 
 	free(data->philos);
+	free(data->process_id);
+
+	
 	// dprintf(2, "pid = %d, data = %p\n", getpid(), data);
 	philo = initialize_data_process(data, i);
 
-	printf("nr_rounds: %d\n", philo->data->nr_rounds);
-	
 	philo->thread = malloc(sizeof(pthread_t));
 	// dprintf(2, "thread: %p\n", philo->thread);
 	if (!philo->thread)
@@ -106,21 +108,24 @@ static int	execute_process(t_data *data, int i)
 		if (overeaten(philo) == 1)
 		{
 			write_message(philo, msg_die);
-			// clean_up_process(philo);
 			exit(DEAD);
 		}
 		sem_post(philo->s_dead);
 		
 		sem_wait(philo->s_status);
 		if (philo->status == INNACTIVE)
+		{
+			pthread_join(*philo->thread, NULL);
 			exit (FULL);
+		}
 		sem_post(philo->s_status);
 
 		usleep(5000);
 	}
-	// clean_up_process(philo);
-	// return (OK);
 	pthread_join(*philo->thread, NULL);
+	// clean_up_process(philo);
+	return (OK);
+	
 }
 
 int	create_processes(t_data *data)

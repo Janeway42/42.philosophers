@@ -6,7 +6,7 @@
 /*   By: cpopa <cpopa@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/05/30 11:25:36 by cpopa         #+#    #+#                 */
-/*   Updated: 2022/07/21 20:42:45 by janeway       ########   odam.nl         */
+/*   Updated: 2022/07/22 12:59:36 by cpopa         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,14 +45,12 @@ void	*routine(void *arg)
 		philo_eat(philo);
 		if (philo->data->nr_rounds != -1
 			&& philo->times_eaten == philo->data->nr_rounds)
-			{
-				sem_wait(philo->s_status);
-				philo->status = INNACTIVE;
-				sem_post(philo->s_status);
-				return (NULL);
-			}
+			break ;
 		philo_sleep(philo);
 		philo_think(philo);
 	}
+	sem_wait(philo->s_status);
+	philo->status = INNACTIVE;
+	sem_post(philo->s_status);
 	return (NULL);
 }
