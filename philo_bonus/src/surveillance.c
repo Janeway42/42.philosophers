@@ -6,7 +6,7 @@
 /*   By: cpopa <cpopa@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/05/30 11:25:36 by cpopa         #+#    #+#                 */
-/*   Updated: 2022/07/22 16:35:33 by cpopa         ########   odam.nl         */
+/*   Updated: 2022/07/25 17:33:48 by cpopa         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,6 @@ int	kill_processes(t_data *data)
 	while (i < data->nr_philo)
 	{
 		waitpid(data->process_id[i], NULL, 0);
-		// dprintf(2, "waitinggg\n");
 		i++;
 	}
 	return (OK);
@@ -54,7 +53,7 @@ int	surveillance(t_data *data)
 			if (WIFEXITED(status) && WEXITSTATUS(status) == ERROR)
 				return (general_error(data, "error exit\n"));
 			i++;
-			usleep(20000);
+			usleep(500000);
 		}
 	}
 	return (OK);

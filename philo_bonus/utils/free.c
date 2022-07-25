@@ -6,7 +6,7 @@
 /*   By: cpopa <cpopa@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/05/30 11:25:36 by cpopa         #+#    #+#                 */
-/*   Updated: 2022/07/19 13:50:29 by janeway       ########   odam.nl         */
+/*   Updated: 2022/07/25 13:40:36 by cpopa         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,16 @@ void	close_semaphore(sem_t *sem, char *name)
 {
 	sem_unlink(name);
 	sem_close(sem);
+}
+
+void	clean_up_process(t_philo *philo)
+{
+	close_semaphore(philo->s_last_meal, philo->name_last_meal);
+	close_semaphore(philo->s_dead, philo->name_dead);
+	free(philo->name_last_meal);
+	free(philo->name_dead);
+	free(philo->name_status);
+	free(philo);
 }
 
 void	clean_up(t_data *data)

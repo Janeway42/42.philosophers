@@ -6,7 +6,7 @@
 /*   By: cpopa <cpopa@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/05/30 11:25:36 by cpopa         #+#    #+#                 */
-/*   Updated: 2022/07/22 23:26:24 by janeway       ########   odam.nl         */
+/*   Updated: 2022/07/25 13:35:52 by cpopa         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ static int	initialize_semaphores(t_data *data)
 	data->s_forks = open_semaphore(&data->s_forks, "FORKS", data->nr_philo);
 	if (data->s_forks == SEM_FAILED)
 		return (error_semaphore("sem failed: s_forks\n", data));
-	// dprintf(2, "FORKS = %p\n", data->s_forks);
 	data->s_write = open_semaphore(&data->s_write, "WRITE", 1);
 	if (data->s_write == SEM_FAILED)
 		return (error_semaphore("sem failed: s_write\n", data));
@@ -35,18 +34,10 @@ static int	initialize_semaphores(t_data *data)
 
 static int	allocate_memory(t_data *data)
 {
-	// int i = 0;
-
 	data->philos = malloc(sizeof(t_philo) * data->nr_philo);
 	data->process_id = malloc(sizeof(pid_t) * data->nr_philo);
 	if (!data->philos || !data->process_id)
 		return (error_memory(data, "malloc fail: process_id\n"));
-	// while (i < data-> nr_philo)
-	// {
-	// 	dprintf(2, "processes = %p\n", &data->process_id[i]);
-	// 	i++;
-
-	// }
 	return (OK);
 }
 

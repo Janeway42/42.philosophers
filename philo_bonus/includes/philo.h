@@ -6,7 +6,7 @@
 /*   By: janeway <janeway@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/06/26 12:01:51 by janeway       #+#    #+#                 */
-/*   Updated: 2022/07/21 20:42:02 by janeway       ########   odam.nl         */
+/*   Updated: 2022/07/25 16:18:05 by cpopa         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,6 +117,7 @@ sem_t			*open_semaphore(sem_t **address, char *name, int size);
 */
 
 int				create_processes(t_data *data);
+t_philo			*initialize_data_process(t_data *data, int i);
 
 /*
 ** Routine
@@ -148,6 +149,7 @@ unsigned long	get_time(void);
 unsigned long	get_elapsed_time(t_philo *philo);
 void			better_sleep(int sleep_time);
 void			write_message(t_philo *philo, enum e_msg message);
+int				check_status(t_philo *philo);
 
 /*
 ** Surveillance

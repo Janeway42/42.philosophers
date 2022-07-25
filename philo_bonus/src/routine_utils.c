@@ -6,11 +6,23 @@
 /*   By: cpopa <cpopa@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/05/30 11:25:36 by cpopa         #+#    #+#                 */
-/*   Updated: 2022/07/22 16:33:15 by cpopa         ########   odam.nl         */
+/*   Updated: 2022/07/25 17:48:51 by cpopa         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/philo.h"
+
+int	check_status(t_philo *philo)
+{
+	int	status;
+
+	status = 0;
+	sem_wait(philo->s_status);
+	if (philo->status == INNACTIVE)
+		status = 1;
+	sem_post(philo->s_status);
+	return (status);
+}
 
 int	philo_eat(t_philo *philo)
 {
@@ -19,9 +31,9 @@ int	philo_eat(t_philo *philo)
 	sem_post(philo->s_last_meal);
 	sem_wait(philo->s_dead);
 	write_message(philo, msg_eat);
+	sem_post(philo->s_dead);
 	better_sleep(philo->data->t_eat);
 	philo->times_eaten += 1;
-	sem_post(philo->s_dead);
 	sem_post(philo->data->s_forks);
 	sem_post(philo->data->s_forks);
 	return (OK);
@@ -36,5 +48,5 @@ void	philo_sleep(t_philo *philo)
 void	philo_think(t_philo *philo)
 {
 	write_message(philo, msg_think);
-	usleep(300);
+	usleep(350);
 }
