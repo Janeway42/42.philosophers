@@ -6,11 +6,24 @@
 /*   By: cpopa <cpopa@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/05/30 11:25:36 by cpopa         #+#    #+#                 */
-/*   Updated: 2022/07/25 17:33:48 by cpopa         ########   odam.nl         */
+/*   Updated: 2022/07/26 14:56:57 by cpopa         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/philo.h"
+
+static void	pause_surveillance(int full)
+{
+	int	i;
+
+	i = 0;
+	if (full == 0)
+	{
+		while (i < 6)
+			usleep(100000);
+		i++;
+	}
+}
 
 int	kill_processes(t_data *data)
 {
@@ -48,12 +61,14 @@ int	surveillance(t_data *data)
 			if (WIFEXITED(status) && WEXITSTATUS(status) == DEAD)
 				return (kill_processes(data));
 			if (WIFEXITED(status) && WEXITSTATUS(status) == FULL)
+			{
 				if (++full == data->nr_philo)
 					return (kill_processes(data));
+			}
 			if (WIFEXITED(status) && WEXITSTATUS(status) == ERROR)
 				return (general_error(data, "error exit\n"));
 			i++;
-			usleep(500000);
+			pause_surveillance(full);
 		}
 	}
 	return (OK);

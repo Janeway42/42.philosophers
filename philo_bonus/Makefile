@@ -1,5 +1,5 @@
 NAME = philo_bonus
-CFLAGS	= -Wall -Werror -Wextra -g #-fsanitize=address #-fsanitize=thread
+CFLAGS	= -Wall -Werror -Wextra -g
 LFLAGS	= -pthread
 
 UNAME = $(shell uname)
@@ -7,7 +7,7 @@ UNAME = $(shell uname)
 S_SRC	=	philo_bonus.c\
 			initialize_data.c\
 			create_processes.c\
-			processes_init.c\
+			processes_utils.c\
 			routine.c\
 			routine_utils.c\
 			surveillance.c
@@ -26,6 +26,7 @@ BASICS_OBJ	=	$(BASICS:%.c=$(BASICS_PATH)%.o)
 UTILS		=	write.c\
 				sleep.c\
 				error.c\
+				error_utils.c\
 				free.c
 UTILS_PATH	=	./utils/
 UTILS_OBJ	=	$(UTILS:%.c=$(UTILS_PATH)%.o)

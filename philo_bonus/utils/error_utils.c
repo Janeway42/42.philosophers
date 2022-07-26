@@ -1,40 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   routine_utils.c                                    :+:    :+:            */
+/*   error_utilss.c                                     :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: cpopa <cpopa@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/05/30 11:25:36 by cpopa         #+#    #+#                 */
-/*   Updated: 2022/07/26 14:27:37 by cpopa         ########   odam.nl         */
+/*   Updated: 2022/07/26 12:00:58 by cpopa         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/philo.h"
 
-int	philo_eat(t_philo *philo)
+int	general_error(t_data *data, char *str)
 {
-	sem_wait(philo->s_last_meal);
-	philo->last_eaten = (int)get_elapsed_time(philo);
-	sem_post(philo->s_last_meal);
-	sem_wait(philo->s_dead);
-	write_message(philo, msg_eat);
-	sem_post(philo->s_dead);
-	better_sleep(philo->data->t_eat);
-	philo->times_eaten += 1;
-	sem_post(philo->data->s_forks);
-	sem_post(philo->data->s_forks);
-	return (OK);
-}
-
-void	philo_sleep(t_philo *philo)
-{
-	write_message(philo, msg_sleep);
-	better_sleep(philo->data->t_sleep);
-}
-
-void	philo_think(t_philo *philo)
-{
-	write_message(philo, msg_think);
-	usleep(300);
+	write(STDERR_FILENO, str, ft_strlen(str));
+	kill_processes(data);
+	free_memory(data);
+	exit(ERROR);
 }

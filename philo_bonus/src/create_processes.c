@@ -6,24 +6,11 @@
 /*   By: cpopa <cpopa@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/05/30 11:25:36 by cpopa         #+#    #+#                 */
-/*   Updated: 2022/07/25 17:49:15 by cpopa         ########   odam.nl         */
+/*   Updated: 2022/07/26 14:31:37 by cpopa         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/philo.h"
-
-static int	overeaten(t_philo *philo)
-{
-	int	eat_time;
-
-	eat_time = 0;
-	sem_wait(philo->s_last_meal);
-	if (((int)get_elapsed_time(philo) - philo->last_eaten)
-		>= philo->data->t_die)
-		eat_time = 1;
-	sem_post(philo->s_last_meal);
-	return (eat_time);
-}
 
 static int	stop_dead(t_philo *philo, int exit_code)
 {
@@ -52,10 +39,10 @@ static int	execute_process(t_data *data, int i)
 	thread = NULL;
 	philo = initialize_data_process(data, i);
 	if (pthread_create(&thread, NULL, routine, philo) != 0)
-		error_exit("pthread_create fail\n");
+		error_exit_process("pthread_create fail\n", philo);
 	while (1)
 	{
-		if (check_status(philo) == 1 && overeaten(philo) == 0)
+		if (check_status(philo) == 1)
 			stop_full(philo, &thread, FULL);
 		else if (overeaten(philo) == 1)
 			stop_dead(philo, DEAD);

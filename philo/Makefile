@@ -1,5 +1,5 @@
 NAME = philo
-CFLAGS	= -Wall -Werror -Wextra -g #-fsanitize=thread  #-fsanitize=address 
+CFLAGS	= -Wall -Werror -Wextra -g
 LFLAGS	= -pthread
 UNAME = $(shell uname)
 

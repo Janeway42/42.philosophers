@@ -6,7 +6,7 @@
 /*   By: cpopa <cpopa@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/05/30 11:25:36 by cpopa         #+#    #+#                 */
-/*   Updated: 2022/07/25 13:36:22 by cpopa         ########   odam.nl         */
+/*   Updated: 2022/07/26 12:09:37 by cpopa         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,17 +55,10 @@ static int	check_input(int argc, char **argv, t_data *data)
 	return (OK);
 }
 
-void	checkleaks(void)
-{
-	system("leaks philo_bonus");
-}
-
 int	main(int argc, char **argv)
 {
 	t_data	data;
 
-	// atexit(checkleaks); // remove?
-	// system("leaks philo_bonus");
 	if (check_input(argc, argv, &data) == ERROR)
 		return (ERROR);
 	if (initialize_data(&data) == ERROR)
