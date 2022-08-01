@@ -6,7 +6,7 @@
 /*   By: cpopa <cpopa@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/05/30 11:25:36 by cpopa         #+#    #+#                 */
-/*   Updated: 2022/07/26 12:09:37 by cpopa         ########   odam.nl         */
+/*   Updated: 2022/08/01 12:14:30 by cpopa         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,12 @@ static int	check_digit(char *input, int *str)
 	size_t	lenght;
 	char	*test;
 
+	if (*input == '\0')
+		return (ERROR);
 	nr = ft_atoi(input);
 	test = ft_itoa(nr);
 	lenght = ft_strlen(input);
-	if (ft_strncmp(input, test, lenght) != 0)
+	if (test == NULL || ft_strncmp(input, test, lenght) != 0)
 	{
 		free(test);
 		return (ERROR);
