@@ -27,3 +27,7 @@ Run:
 -----
 - make
 - ./philo number_of_philosophers time_to_die time_to_eat time_to_sleep (optional: number_of_times_each_philosopher_must_eat)
+
+Useful info:
+---
+- [Philosophers visualizer](https://nafuka11.github.io/philosophers-visualizer/)    *(input = output of philo)*
