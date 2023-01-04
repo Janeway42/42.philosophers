@@ -15,11 +15,11 @@ philosopher dies.
 
 Specific rules: 
 ---------------
-- The "philo" version: 
+- **philo**
   - Each philosopher is a **thread**.
   - There is **one fork** between each pair of philosophers. Therefore, if there are several philosophers, each philosopher has a fork on their left side and a fork on their right side. If there is only one philosopher, there should be only one fork on the table.
   - To prevent philosophers from duplicating forks, a mutex is used to protect the forks state for each one of them.
-- The "philo_bonus" version:
+- **philo_bonus**
   - The forks are placed in the middle of the table and thus represented with the use of a **semaphore**
   - Each philosopher is a **process**. However, the main process cannot be a philosopher process. 
 
