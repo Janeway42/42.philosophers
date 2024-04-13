@@ -1,5 +1,17 @@
-# **Philosophers**
-Dining philosophers [problem](https://en.wikipedia.org/wiki/Dining_philosophers_problem)
+# **42.Philosophers**
+
+
+Run:
+------
+- **make**
+- ./philo number_of_philosophers time_to_die time_to_eat time_to_sleep (optional: number_of_times_each_philosopher_must_eat)
+
+-------------------------------------------------------------------
+
+[42 The Network](https://www.42network.org/) Assignment:
+-----------
+
+Dining philosophers [problem](https://en.wikipedia.org/wiki/Dining_philosophers_problem)  
 
 Input: 
 -------
@@ -21,13 +33,21 @@ Specific rules:
   - To prevent philosophers from duplicating forks, a mutex is used to protect the forks state for each one of them.
 - **philo_bonus**
   - The forks are placed in the middle of the table and thus represented with the use of a **semaphore**
-  - Each philosopher is a **process**. However, the main process cannot be a philosopher process. 
+  - Each philosopher is a **process**. However, the main process cannot be a philosopher process.
+--- 
+- Allowed external functions: memset, printf, malloc, free, write, usleep, gettimeofday, pthread_create, pthread_detach, pthread_join, pthread_mutex_init, pthread_mutex_destroy, pthread_mutex_lock, pthread_mutex_unlock
 
-Run:
------
-- make
-- ./philo number_of_philosophers time_to_die time_to_eat time_to_sleep (optional: number_of_times_each_philosopher_must_eat)
+-------------------------------------------------------------------
+
+Code format: 
+------------
+The code must be written in accordance to the 42 set of norms.  
+These include for example a maximum of 25 lines per function, at most 80 columns per line, comments included and a maximum of five functions per file. 
+
+-------------------------------------------------------------------
 
 Useful info:
 ---
 - [Philosophers visualizer](https://nafuka11.github.io/philosophers-visualizer/)    *(input = output of philo)*
+
+-------------------------------------------------------------------
